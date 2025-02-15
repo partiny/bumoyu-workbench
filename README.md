@@ -1,13 +1,12 @@
 ## 项目简介
 
-`bumoyu-workbench` 是基于 Vue3 + Typescript5 + AntDesignVue 等主流技术栈构建的个人工作台项目。整个项目包括工作台（当前工程）、管理后台（`bumoyu-admin`）、后端（`bumoyu-nest`）和谷歌插件（`bumoyu-chrome-extension`）四个工程组成。
+`bumoyu-workbench` 是基于 Vue3 + Typescript5 + AntDesignVue 等主流技术栈构建的个人工作台项目。整个项目包括工作台（当前工程）、后端（`bumoyu-nest`）和谷歌插件（`bumoyu-chrome-extension`）三个工程组成。
 
 ## 项目地址
 
 - `bumoyu-workbench`: [Github 地址](https://github.com/partiny/bumoyu-workbench) | [Gitee 地址](https://gitee.com/partiny/bumoyu-workbench)
 - `bumoyu-nest`: [Github 地址](https://github.com/partiny/bumoyu-nest) | [Gitee 地址](https://gitee.com/partiny/bumoyu-nest)
-- `bumoyu-admin`: [Github 地址](https://github.com/partiny/bumoyu-admin) | [Gitee 地址](https://gitee.com/partiny/bumoyu-admin)
-
+- `bumoyu-chrome-extension`: [Github 地址](https://github.com/partiny/bumoyu-chrome-extension) | [Gitee 地址](https://gitee.com/partiny/bumoyu-chrome-extension)
 
 ## 项目计划
 
