@@ -1,0 +1,21 @@
+## 导航页目录结构
+
+- page-navigation 根目录
+  - components 通用组件
+    - search-area 搜索功能
+    - link-form 新增/编辑链接的表单
+    - category-form 新增/编辑分类的表单
+    - link-item 链接主题组件集合（新增的链接主题的时候都放在此目录）
+  - mode-multiple 多组件模式（当前窗口只展示一个分类，通过滚轮或菜单切换分类）
+    - components 组件目录
+      - category-list 链接分类列表
+      - link-list 链接列表项
+  - mode-single 单组件模式（所有分类展示在同一个窗口）
+    - components 组件目录
+      - category-list 链接分类列表
+      - category-item 链接分类项
+    - index.vue 入口页
+    - mode-single-card.vue 卡片主题（后续可能会新增其他主题，每个主题一个vue文件）
+  - index.vue 入口页
+  - interface.ts 类型文件
+  - README.md 说明文档

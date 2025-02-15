@@ -1,0 +1,24 @@
+@import './reset.css';
+@import './base.css';
+
+:root {
+  --qt-primary-color: #615ced;
+  --qt-sub-color: #9189fa;
+  --qt-text-1: #2c2c36;
+  --qt-text-2: #8f91a8;
+}
+
+.ant-empty {
+  font-size: 13px;
+  color: #72728b;
+}
+
+/* 取消input自动填充的样式 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #fff inset!important; /* 使用与背景相同的颜色覆盖 */
+    -webkit-text-fill-color: var(--qt-text-1)!important; /* 设置文本颜色 */
+    transition: background-color 5000s ease-in-out 0s; /* 防止背景色闪烁 */
+}

@@ -1,0 +1,24 @@
+html, body, #app {
+  height: 100%;
+}
+#app {
+  background: #f3f5f9;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  transition: .25s;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+}
+:hover::-webkit-scrollbar-thumb {
+  background: #e0e2eb;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c6c4ff;
+}
+::-webkit-scrollbar-track {
+  border-radius: 0px;
+  background: rgba(224, 226, 225, 0);
+}
