@@ -13,16 +13,17 @@
       </li>
     </ul>
     <div class="bottom-list">
-      <a-tooltip placement="right" title="设置" :mouse-enter-delay="0.5">
-        <SettingOutlined
+      <a-tooltip
+        v-for="item in extraMenuList"
+        :key="item.id"
+        placement="right"
+        :title="item.name"
+        :mouse-enter-delay="0.5"
+      >
+        <component
+          :is="item.icon"
           :style="{ color: 'rgba(255, 255, 255, .6)', fontSize: '20px' }"
-          @click.stop="isSettingModalShow = true"
-        />
-      </a-tooltip>
-      <a-tooltip placement="right" title="历史备份记录" :mouse-enter-delay="0.5">
-        <ClockCircleOutlined
-          :style="{ color: 'rgba(255, 255, 255, .6)', fontSize: '20px' }"
-          @click.stop="isBackupModalShow = true"
+          @click.stop="item.onClick"
         />
       </a-tooltip>
       <div class="menu-userinfo" @click.stop>
@@ -49,13 +50,39 @@ import IconUserInfo from '@/assets/images/IconUserInfo.svg'
 import { useRouter } from 'vue-router';
 import { getUserInfo, removeToken } from '@/utils';
 import { ref } from 'vue';
-import { ClockCircleOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { ClockCircleOutlined, SettingOutlined, FileTextOutlined } from '@ant-design/icons-vue';
 import BackupModal from '@/views/page-navigation/components/backup-modal.vue';
 import SettingModal from '@/views/page-navigation/components/setting-modal.vue';
 
 const router = useRouter()
 const menuList = [
   { id: 3, name: '导航', icon: IconNav, url: '/navigation' }
+]
+const extraMenuList = [
+  {
+    id: 1,
+    name: '文档指南',
+    icon: FileTextOutlined,
+    onClick: () => {
+      window.open(window.location.origin + '/docs')
+    }
+  },
+  {
+    id: 2,
+    name: '设置',
+    icon: SettingOutlined,
+    onClick: () => {
+      isSettingModalShow.value = true
+    }
+  },
+  {
+    id: 3,
+    name: '历史备份记录',
+    icon: ClockCircleOutlined,
+    onClick: () => {
+      isBackupModalShow.value = true
+    }
+  }
 ]
 const isFold = ref(true) // 是否折叠
 const isBackupModalShow = ref(false) // 控制历史备份记录弹窗显隐
