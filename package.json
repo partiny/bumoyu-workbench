@@ -1,7 +1,9 @@
 {
   "name": "bumoyu-workbench",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "不摸鱼的前端工程",
+  "license": "MIT",
+  "author": "Partiny <partiny@163.com>",
   "type": "module",
   "scripts": {
     "dev": "vite --mode dev",
