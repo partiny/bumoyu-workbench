@@ -11,12 +11,14 @@
         chosen-class="chosen"
         item-key="id"
         :animation="400"
-        @start="linkEvent.dragStart(categoryId || '')"
-        @end="linkEvent.dragEnd(categoryId || '', list)"
+        :data-category-id="categoryId"
+        @start="linkEvent.dragStart"
+        @end="e => linkEvent.dragEnd(e, list)"
       >
         <template #item="{ element }">
           <link-item
             :item="element"
+            :data-link-id="element.id"
             v-context-menu="linkEvent.getLinkContextMenuProps(element, categoryId)"
             @click="openNewTab(element.url)"
           />

@@ -1,5 +1,5 @@
 import { reactive, ref } from "vue";
-import type { LinkDto, LinkTreeDto } from "../interface";
+import type { DragEventDto, LinkDto, LinkTreeDto } from "../interface";
 import { http, openNewTab } from "@/utils";
 import type { ContextMenuProps } from "@/directives/context-menu/interface";
 import { ApiLink } from "@/apis";
@@ -99,6 +99,8 @@ function handleLinkAdd(categoryId?: string) {
 }
 /**删除链接 */
  function handleLinkDelete(id?: string) {
+  const isDeleting = ref(false)
+
   if (!id) {
     toast.info('未获取到分类id')
     return
@@ -109,8 +111,11 @@ function handleLinkAdd(categoryId?: string) {
     cancelText: '取消',
     okText: '确认',
     onOk() {
+      if (isDeleting.value) return;
+      isDeleting.value = true;
       http.post(ApiLink.deleteLink, { id })
         .then(res => {
+          isDeleting.value = false;
           const { success, message  } = res
           if (!success) {
             toast.error(message || '删除链接请求错误')
@@ -120,6 +125,7 @@ function handleLinkAdd(categoryId?: string) {
           onRefresh()
         })
         .catch(error => {
+          isDeleting.value = false;
           toast.error(error || '删除链接请求错误')
         })
     }
@@ -127,40 +133,67 @@ function handleLinkAdd(categoryId?: string) {
 }
 /**拖拽开始 */
 let oldIds: string | null = null
-function handleDragStart(categoryId: string) {
-  const list = categoryInfo.list.find(category => category.id === categoryId)?.children || []
-  oldIds = list.map(item => item.id).join(',')
-}
-/**拖拽结束 */
-function handleDragEnd(categoryId: string, currentList?: LinkDto[]) {
-  // 多组件模式下用currentList
-  const list = currentList || categoryInfo.list.find(category => category.id === categoryId)?.children || []
-  const linkIds = list.map(item => item.id)
-  if (!categoryId || !linkIds.length) {
+const isDragging = ref(false)
+/**拖拽开始 */
+function handleDragStartNew(e: DragEventDto) {
+  if (isDragging.value) return
+  isDragging.value = true
+
+  const { id: linkId, categoryId } = e.item?._underlying_vm_ || {}
+  if (!linkId || !categoryId) {
     toast.info('未获取到分类id或链接id')
     return
   }
+
+  const list = categoryInfo.list.find(category => category.id === categoryId)?.children || []
+  oldIds = list.map(item => item.id).join(',')
+}
+
+/**拖拽结束 */
+function handleDragEndNew(e: DragEventDto, currentList?: LinkDto[]) {
+  // 多组件模式下用currentList
+
+  const fromCategoryId = e.from?.dataset?.categoryId
+  const toCategoryId = e.to?.dataset?.categoryId
+  const itemLinkId = e.item?.dataset?.linkId
+  const endList = currentList || categoryInfo.list.find(category => category.id === toCategoryId)?.children || []
+
+  if (!fromCategoryId || !toCategoryId || !itemLinkId) {
+    toast.info('未获取到分类id或链接id')
+    isDragging.value = false
+    return
+  }
+
+  const linkIds = endList.map(item => item.id)
+
   if (linkIds.join(',') === oldIds) {
     oldIds = null
     return
   }
-  oldIds = null
 
-  http.post(ApiLink.updateOrderOfLinks, {
-    categoryId,
-    linkIds
-  }).then(res => {
-    const { success, message  } = res
-    if (!success) {
-      toast.error(message || '修改排序请求错误')
-      return
-    }
-    onRefresh()
-  })
-  .catch(error => {
-    toast.error(error || '修改排序请求错误')
-  })
+  const params = {
+    linkId: itemLinkId,
+    fromCategoryId,
+    toCategoryId,
+    toLinkIds: linkIds
+  }
+  
+  http.post(ApiLink.updateOrderOfLinksCrossCategory, params)
+    .then(res => {
+      isDragging.value = false
+      const { success, message } = res
+      if (!success) {
+        toast.error(message || '修改排序请求错误')
+        return
+      }
+      onRefresh()
+    })
+    .catch(error => {
+      isDragging.value = false
+      toast.error(error || '修改排序请求错误')
+    })
 }
+
 /**刷新分类列表 */
 function onRefresh() {
   categoryEvent.getList()
@@ -175,9 +208,10 @@ export const useLink = () => {
     linkEvent: {
       getCategoryContextMenuProps,
       getLinkContextMenuProps,
-      dragStart: handleDragStart,
-      dragEnd: handleDragEnd,
-      add: handleLinkAdd
+      dragStart: handleDragStartNew,
+      dragEnd: handleDragEndNew,
+      add: handleLinkAdd,
+      isDragging
     }
   }
 }

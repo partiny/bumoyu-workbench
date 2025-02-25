@@ -12,6 +12,7 @@ export interface LinkDto {
   type?: string;
   url?: string;
   view?: number;
+  categoryId?: string;
 }
 /**
  * 链接树Dto
@@ -21,4 +22,23 @@ export interface LinkTreeDto {
   icon?: string;
   name?: string;
   children?: LinkDto[];
+}
+/**拖拽事件Dto */
+export interface DragEventDto {
+  item: {
+    _underlying_vm_: LinkDto;
+    dataset: {
+      linkId: string;
+    }
+  },
+  from: {
+    dataset: {
+      categoryId: string;
+    }
+  },
+  to: {
+    dataset: {
+      categoryId: string;
+    }
+  }
 }

@@ -26,5 +26,7 @@ export const ApiLink = {
   /**批量修改链接顺序 */
   updateOrderOfLinks: `${PREFIX}/update-order-of-links`,
   /**批量修改分类顺序 */
-  updateOrderOfCategorys: `${PREFIX}/update-order-of-categorys`
+  updateOrderOfCategorys: `${PREFIX}/update-order-of-categorys`,
+  /**批量修改链接顺序（可跨分类） */
+  updateOrderOfLinksCrossCategory: `${PREFIX}/update-order-of-links-cross-category`,
 }

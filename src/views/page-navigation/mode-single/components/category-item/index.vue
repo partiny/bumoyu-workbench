@@ -2,32 +2,48 @@
   <div class="category-item" v-context-menu="linkEvent.getCategoryContextMenuProps(category.id)">
     <h3 class="category-item-title">{{ category.name }}</h3>
     <draggable
-      v-if="list && list.length"
       :key="category.id"
       v-model="list"
+      group="group-category"
       class="link-list"
       handle=".link-item"
       ghost-class="ghost"
       chosen-class="chosen"
       item-key="id"
       :animation="400"
-      @start="linkEvent.dragStart(category.id || '')"
-      @end="linkEvent.dragEnd(category.id || '')"
+      :data-category-id="category.id"
+      @start="linkEvent.dragStart"
+      @end="linkEvent.dragEnd"
     >
+      <div v-if="list.length === 0" class="empty-placeholder">
+      暂无数据，请添加内容
+    </div>
       <template #item="{ element }">
         <link-item
           :item="element"
+          :data-link-id="element.id"
           v-context-menu="linkEvent.getLinkContextMenuProps(element, category.id || '')"
           @click="openNewTab(element.url)"
         />
       </template>
     </draggable>
-    <div v-else class="h-100% flex items-center justify-center" :key="`else-${category.id}`">
+    <!-- <div v-else class="h-100% flex items-center justify-center" :key="`else-${category.id}`">
       <a-empty
         v-if="categoryInfo.requestFinished"
         description="链接空空如也，右键新建一个吧~"
       />
-    </div>
+    </div> -->
+    <!-- <draggable
+      v-else
+      group="group-category"
+      class="link-list"
+    >
+      <template #item="{ element }">
+        <a-empty
+        description="链接空空如也，右键新建一个吧~"
+      />
+      </template>
+    </draggable> -->
   </div>
 </template>
 <script setup lang="ts">
