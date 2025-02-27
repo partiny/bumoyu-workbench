@@ -29,4 +29,6 @@ export const ApiLink = {
   updateOrderOfCategorys: `${PREFIX}/update-order-of-categorys`,
   /**批量修改链接顺序（可跨分类） */
   updateOrderOfLinksCrossCategory: `${PREFIX}/update-order-of-links-cross-category`,
+  /**获取网站图标 */
+  getFaviconUrl: `${PREFIX}/get-favicon-url`
 }

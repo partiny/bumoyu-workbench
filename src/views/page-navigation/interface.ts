@@ -13,6 +13,7 @@ export interface LinkDto {
   url?: string;
   view?: number;
   categoryId?: string;
+  srcShow?: number;
 }
 /**
  * 链接树Dto

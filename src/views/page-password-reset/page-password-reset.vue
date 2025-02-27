@@ -84,7 +84,7 @@
 </template>
 <script setup lang="ts">
 import { ApiAuth } from '@/apis';
-import { http, setRefreshToken, setToken, openNewTab } from '@/utils';
+import { http, setRefreshToken, setToken, openNewTab, REGEXP } from '@/utils';
 import { computed, reactive, ref } from 'vue';
 import { message as toast } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -109,9 +109,6 @@ const form = reactive(formInit())
 const formRef = ref()
 const loading = ref(false)
 const router = useRouter()
-const REGEXP = {
-  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
-}
 const isEmailCorrect = computed(() => REGEXP.email.test(form.email))
 const isSendAllow = ref(true)
 const isSendInit = ref(true)

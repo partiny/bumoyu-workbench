@@ -14,6 +14,20 @@
       }"
       label-align="left"
     >
+      <a-form-item label="地址">
+        <a-input v-model:value="form.url" placeholder="http:// 或 https://" allow-clear>
+          <template #suffix>
+            <a-button
+              class="p-0"
+              type="link"
+              size="small"
+              :disabled="!form.url"
+              :loading="faviconLoading"
+              @click="getFaviconUrl"
+            >获取图标</a-button>
+          </template>
+        </a-input>
+      </a-form-item>
       <a-form-item label="名称">
         <a-input
           v-model:value="form.name"
@@ -22,9 +36,6 @@
           :maxlength="20"
           show-count
         />
-      </a-form-item>
-      <a-form-item label="地址">
-        <a-input v-model:value="form.url" placeholder="请输入" allow-clear />
       </a-form-item>
       <a-form-item label="图标颜色">
         <ul class="color-list">
@@ -49,6 +60,26 @@
           :maxlength="6"
           show-count
         />
+      </a-form-item>
+      <a-form-item label="官方图标">
+        <div class="flex items-center">
+          <a-switch
+            v-model:checked="form.srcShow"
+            :checked-value="1"
+            :un-checked-value="0"
+            checked-children="展示"
+            un-checked-children="隐藏"
+            @change="handleFaviconSwitchChange"
+          />
+          <a-image
+            v-if="form.src"
+            class="ml-10px b-rd-50% bg-#f6f7fb p-2px"
+            width="24px"
+            height="auto"
+            :src="form.src"
+            :preview="false"
+          />
+        </div>
       </a-form-item>
       <a-form-item label="预览">
         <div class="bg-#f6f7fb border-rd-4 p-4">
@@ -76,20 +107,29 @@ const initFormData = () => ({
   url: '',
   name: '',
   backgroundColor: '',
-  iconText: ''
+  iconText: '',
+  src: '',
+  srcShow: 0 // 默认不展示图标 1展示 0不展示
 })
 const form = reactive(initFormData())
 watch(() => linkInfo.form.show, val => {
-  const { id, url, name, backgroundColor, iconText } = linkInfo.form.current
+  const { id, url, name, backgroundColor, iconText, src, srcShow } = linkInfo.form.current
   if (val && id) {
     form.url = url || ''
     form.name = name || ''
     form.backgroundColor = backgroundColor || ''
     form.iconText = iconText || ''
+    form.srcShow = srcShow ?? 0
+    form.src = src ?? ''
   }
 })
 const isEdit = computed(() => !!linkInfo.form.current.id)
-const colorList = [ '#1681ff', '#fbbe23', '#fc4548', '#4b3c36', '#7dac88', '#023373', '#c8ac70', '#372128', '#c82c34', '#054092', '#a3ddb9' ]
+const colorList = [
+  '#1681ff', '#fbbe23', '#fc4548', '#4b3c36', '#7dac88', '#023373', '#c8ac70', '#372128', '#c82c34', '#054092', '#a3ddb9',
+  '#fff'
+]
+const faviconLoading = ref(false)
+
 /**
  * 关闭表单
  */
@@ -155,6 +195,38 @@ function handleConfirm() {
       loading.value = false
       toast.error(error || `${typeName}链接请求错误`)
     })
+}
+
+/**获取网站图标 */
+function getFaviconUrl() {
+  faviconLoading.value = true
+  http.get<string>(ApiLink.getFaviconUrl, { url: encodeURIComponent(form.url) }, {
+    headers: { 
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' 
+    }
+  })
+    .then(res => {
+      faviconLoading.value = false
+      const { success, message, data } = res
+      if (!success) {
+        toast.error(message || '获取图标失败')
+        return
+      }
+      form.src = data ?? ''
+    })
+    .catch(error => {
+      faviconLoading.value = false
+      toast.error(error || '获取图标失败')
+    })
+}
+/**切换默认显示类型 */
+function handleFaviconSwitchChange(checked: number) {
+  if (checked && !form.src) {
+    toast.warn('请先获取图标')
+    form.srcShow = 0
+  } else {
+    form.srcShow = checked
+  }
 }
 </script>
 <style scoped lang="scss">

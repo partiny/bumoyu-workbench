@@ -2,7 +2,7 @@
 <template>
   <div class="link-item">
     <div class="link-item-icon" :style="{ background: item.backgroundColor }">
-      <img v-if="item.src" :src="item.src" />
+      <img v-if="item.src && item.srcShow" :src="item.src" />
       <span v-else>{{ item.iconText?.substring(0, 1) }}</span>
     </div>
     <div class="link-item-content">
@@ -44,25 +44,24 @@ defineProps({
     border: 1px solid var(--qt-primary-color);
   }
   &-icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 8px;
+    font-size: 9px;
     background: linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),conic-gradient(from 190deg at 57% 40%,#8b6ff4 -96deg,#615ced 41deg,#615ced 207deg,#8b6ff4 264deg,#615ced 401deg);
     position: relative;
+    padding: 2px;
     > img {
-      position: absolute;
-      top: 0;
-      left: 0;
       border-radius: inherit;
       width: 100%;
       height: 100%;
       pointer-events: none;
+      object-fit: cover;
     }
     > span {
       display: inline-block;

@@ -2,7 +2,7 @@
 <template>
   <div class="link-item">
     <div class="link-item-icon" :style="{ background: item.backgroundColor }">
-      <img v-if="item.src" :src="item.src" />
+      <img v-if="item.src && item.srcShow" :src="item.src" />
       <span v-else>{{ item.iconText }}</span>
     </div>
     <p class="link-item-text">{{ item.name }}</p>
