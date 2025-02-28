@@ -103,10 +103,15 @@ import { useLink } from '../../hooks/link';
 
 const { linkInfo } = useLink()
 const emits = defineEmits(['refresh'])
+const colorList = [
+  'linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),conic-gradient(from 190deg at 57% 40%,#8b6ff4 -96deg,#615ced 41deg,#615ced 207deg,#8b6ff4 264deg,#615ced 401deg)',
+  '#1681ff', '#fbbe23', '#fc4548', '#4b3c36', '#7dac88', '#023373', '#c8ac70', '#372128', '#c82c34', '#054092', '#a3ddb9',
+  '#fff'
+]
 const initFormData = () => ({
   url: '',
   name: '',
-  backgroundColor: '',
+  backgroundColor: colorList[0],
   iconText: '',
   src: '',
   srcShow: 0 // 默认不展示图标 1展示 0不展示
@@ -117,17 +122,13 @@ watch(() => linkInfo.form.show, val => {
   if (val && id) {
     form.url = url || ''
     form.name = name || ''
-    form.backgroundColor = backgroundColor || ''
+    form.backgroundColor = backgroundColor || colorList[0]
     form.iconText = iconText || ''
     form.srcShow = srcShow ?? 0
     form.src = src ?? ''
   }
 })
 const isEdit = computed(() => !!linkInfo.form.current.id)
-const colorList = [
-  '#1681ff', '#fbbe23', '#fc4548', '#4b3c36', '#7dac88', '#023373', '#c8ac70', '#372128', '#c82c34', '#054092', '#a3ddb9',
-  '#fff'
-]
 const faviconLoading = ref(false)
 
 /**
@@ -154,20 +155,12 @@ function handleConfirm() {
     toast.info('请输入地址')
     return
   }
-  // if (!form.backgroundColor) {
-  //   toast.info('请选择图标颜色')
-  //   return
-  // }
-  // if (!form.iconText) {
-  //   toast.info('请输入图标文字')
-  //   return
-  // }
   const params: LinkDto = { ...form }
   if (id) {
     params.id = id
   }
   if (!params.backgroundColor) {
-    params.backgroundColor = 'linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),conic-gradient(from 190deg at 57% 40%,#8b6ff4 -96deg,#615ced 41deg,#615ced 207deg,#8b6ff4 264deg,#615ced 401deg)'
+    params.backgroundColor = colorList[0]
   }
   if (!params.iconText) {
     params.iconText = form.name.substring(0, 6)
