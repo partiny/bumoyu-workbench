@@ -26,5 +26,10 @@ export default {
   search: {
     /**搜索引擎 */
     engine: 'bing'
+  },
+  /**菜单 */
+  menu: {
+    autoHide: true, // 自动隐藏
+    hideType: 'click', // 'hover' | 'click'
   }
 }

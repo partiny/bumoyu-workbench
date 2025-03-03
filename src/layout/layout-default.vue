@@ -6,10 +6,12 @@
         <router-view />
       </div>
     </div>
+    <layout-setting-bar />
   </main>
 </template>
 <script setup lang="ts">
 import LayoutSidebar from '@/components/layout-sidebar.vue'
+import LayoutSettingBar from '@/components/layout-setting-bar.vue';
 </script>
 <style scoped lang="scss">
 .layout-container {
@@ -23,7 +25,7 @@ import LayoutSidebar from '@/components/layout-sidebar.vue'
 
 .layout-content {
   height: 100%;
-  padding: 8px 8px 8px 0;
+  padding: 8px 0 8px 0;
   width: 100vw;
   overflow-x: auto;
   &-main {
