@@ -66,8 +66,8 @@ function open(x: number, y: number) {
  * @param e Event
  */
 function close(e: MouseEvent) {
-  if (e && (e?.target as HTMLInputElement)?.tagName?.toLowerCase() !== 'input' && (e.target as HTMLInputElement)?.type !== 'file') {
-    e.preventDefault()
+  if (e?.type === 'contextmenu') {
+    e.preventDefault() // 仅阻止右键菜单的默认行为
   }
   visible.value = false
 }

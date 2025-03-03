@@ -68,7 +68,7 @@ function createContextMenu() {
     const closeMenu = (e?: MouseEvent) => {
       if (contextMenu) contextMenu.close(e);
     };
-    document.addEventListener('click', closeMenu, true);
+    document.addEventListener('click', closeMenu, { capture: false }); // 默认冒泡阶段
     document.addEventListener('contextmenu', closeMenu, true);
   }
   return contextMenu;
