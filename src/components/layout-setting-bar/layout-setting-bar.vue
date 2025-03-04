@@ -38,21 +38,31 @@
   </a-drawer>
 </template>
 <script setup lang="ts">
-import { computed, ref, shallowRef } from 'vue';
+import { computed, onBeforeMount, ref, shallowRef } from 'vue';
 import SettingTheme from './components/setting-theme.vue'
+import SettingNavigation from './components/setting-navigation.vue';
+import SettingSearch from './components/setting-search.vue';
+import SettingMenu from './components/setting-menu.vue';
+import { useGlobalStore } from '@/stores';
 
-const isDrawerShow = ref(true)
+const global = useGlobalStore()
+const isDrawerShow = ref(false)
 const menuList = shallowRef([
   { id: 4, name: '主题', component: SettingTheme },
-  { id: 1, name: '导航' },
-  { id: 2, name: '搜索' },
-  { id: 3, name: '菜单' },
+  { id: 1, name: '导航', component: SettingNavigation },
+  { id: 2, name: '搜索', component: SettingSearch },
+  { id: 3, name: '菜单', component: SettingMenu },
   { id: 5, name: '计划' },
   { id: 6, name: '关于' }
 ])
 const activeMenuId = ref(4)
 
 const activeComponent = computed(() => (menuList.value.find(item => item.id === activeMenuId.value)?.component))
+
+onBeforeMount(() => {
+  // 初始化配置项
+  global.initConfig()
+})
 </script>
 <style scoped lang="scss">
 .layout-setting-bar {

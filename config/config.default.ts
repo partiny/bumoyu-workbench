@@ -12,15 +12,13 @@ export default {
     mode: 'light', // light | dark
     /**主题色 */
     color: '#2b4acb',
-    
-
   },
   /**导航配置 */
   navigation: {
     /**分类类型 */
     category: 'single',
     /**导航类型 */
-    link: 'single'
+    link: 'card'
   },
   /**搜索配置 */
   search: {
@@ -29,7 +27,7 @@ export default {
   },
   /**菜单 */
   menu: {
-    autoHide: true, // 自动隐藏
+    autoHide: 'hide', // 自动隐藏 'hide' | 'show'
     hideType: 'click', // 'hover' | 'click'
   }
 }

@@ -1,11 +1,11 @@
 <template>
-  <div class="pt-20">
+  <div class="pt-20 pb-20 pl-10 pr-10">
     <ul>
       <li>
-        <h5>模式</h5>
+        <h5 class="font-size-16">模式</h5>
         <div class="pt-10">
           <a-radio-group
-            v-model:value="theme.mode"
+            v-model:value="modeValue"
             :options="modeList"
             option-type="button"
             button-style="solid"
@@ -19,18 +19,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { computed } from 'vue';
+import { useGlobalStore } from '@/stores';
 
-const theme = reactive({
-  mode: 'light'
-})
+const global = useGlobalStore()
 const modeList = [
   { value: 'light', label: '浅色' },
   { value: 'dark', label: '深色' },
   { value: 'auto', label: '跟随系统' }
 ]
-
-function handleModeChange(e: Event) {
-  console.log(e)
-}
+const modeValue = computed({
+  get: () => global.config.theme.mode,
+  set: (val: string) => global.updateConfig('theme', {
+    ...global.config.theme,
+    mode: val
+  })
+})
 </script>
