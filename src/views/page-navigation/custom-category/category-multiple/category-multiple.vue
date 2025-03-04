@@ -1,3 +1,4 @@
+<!-- 链接样式 - 多页面 -->
 <template>
   <section class="flex h-100%">
     <layout-menubar>
@@ -8,7 +9,7 @@
     </layout-menubar>
     <div class="content-wrap">
       <search-area />
-      <link-list
+      <category-item
         v-model:list="linkList"
         :category-id="activeId"
         @refresh="handleRefresh"
@@ -19,11 +20,11 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, onMounted, onUnmounted } from 'vue';
 import LayoutMenubar from '@/components/layout-menubar.vue';
-import CategoryList from './components/category-list/category-list.vue';
-import LinkList from './components/link-list/link-list.vue';
-import type { LinkDto, LinkTreeDto } from '../interface';
+import CategoryList from './category-list.vue';
+import CategoryItem from './category-item.vue';
+import type { LinkDto, LinkTreeDto } from '../../interface';
 import { throttle } from '@/utils';
-import SearchArea from '../components/search-area/search-area.vue';
+import SearchArea from '../../components/search-area/search-area.vue';
 import { useCategory } from '@/views/page-navigation/hooks/category';
 
 const {

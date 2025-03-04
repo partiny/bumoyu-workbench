@@ -48,11 +48,11 @@
 </template>
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
-import CategoryItem from '../category-item/index.vue'
+import CategoryItem from './category-item.vue'
 import draggable from 'vuedraggable'
 import { useCategory } from '@/views/page-navigation/hooks/category';
 import CategoryForm from '@/views/page-navigation/components/category-form/category-form.vue';
-import CategorySkeleton from '../category-skeleton/category-skeleton.vue';
+import CategorySkeleton from './category-skeleton.vue';
 
 const {
   category,

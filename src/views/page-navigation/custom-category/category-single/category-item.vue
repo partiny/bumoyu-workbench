@@ -16,7 +16,7 @@
       @end="linkEvent.dragEnd"
     >
       <template #item="{ element }">
-        <link-item
+        <custom-link
           :item="element"
           :data-link-id="element.id"
           v-context-menu="linkEvent.getLinkContextMenuProps(element, category.id || '')"
@@ -35,8 +35,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { LinkDto, LinkTreeDto, PropType } from '../../../interface';
-import LinkItem from '@/views/page-navigation/components/link-item/index.vue'
+import type { LinkDto, LinkTreeDto, PropType } from '../../interface';
+import CustomLink from '../../custom-link/index.vue'
 import { openNewTab } from '@/utils';
 import draggable from 'vuedraggable'
 import { useCategory } from '@/views/page-navigation/hooks/category';
@@ -57,6 +57,8 @@ const list = defineModel<LinkDto[]>('list', {
 </script>
 <style scoped lang="scss">
 .category-item {
+  --link-bar-width: 100%;
+  --link-card-width: 100%;
   background: radial-gradient(49% 49% at 23% 90%,rgba(51,192,253,.3) 0,rgba(51,192,253,0) 100%),radial-gradient(122% 122% at 94% -6%,#dbe2ff 0,#f7f8fc 100%);
   border: 1px solid #e8eaf2;
   border-radius: 16px;
@@ -95,11 +97,12 @@ const list = defineModel<LinkDto[]>('list', {
 }
 .link-list {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  flex-wrap: wrap;
   gap: 10px;
   width: 100%;
   padding: 0 16px;
-  flex: 1;
+  // flex: 1;
   overflow: auto;
   transition: gap .2s;
 }

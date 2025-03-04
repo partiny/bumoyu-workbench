@@ -1,17 +1,16 @@
 <template>
-  <component :is="coms[theme.navigation]"></component>
+  <component :is="coms[currentValue]"></component>
 </template>
 <script setup lang="ts">
-// 单页面 - 卡片模式
-import ModeSingleCard from './mode-single/index.vue';
-// 多页面 - 列表模式
-import ModeMultipleList from './mode-multiple/index.vue';
-import { useThemeStore } from '@/stores/theme'
-import type { Component } from 'vue';
+import CategorySingle from './custom-category/category-single/category-single.vue';
+import CategoryMultiple from './custom-category/category-multiple/category-multiple.vue';
+import { computed, type Component } from 'vue';
+import { useGlobalStore } from '@/stores';
 
-const { theme } = useThemeStore()
+const global = useGlobalStore()
+const currentValue = computed(() => global.config?.navigation?.category || 'single')
 const coms: { [key: string]: Component } = {
-  'single': ModeSingleCard,
-  'multiple': ModeMultipleList
+  'single': CategorySingle,
+  'multiple': CategoryMultiple
 }
 </script>

@@ -12,7 +12,7 @@
             v-for="item in engineList"
             :key="item.code"
             class="engine-item"
-            :class="{ active: item.code === theme.searchEngine }"
+            :class="{ active: item.code === currentEngine }"
             @click="handleChoose(item.code as EngineType)"
           >
             <div class="engine-img">
@@ -34,16 +34,26 @@ import { ref, computed } from 'vue'
 import { engineList, type EngineType } from '../core';
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { useSuggestion } from '../common'
-import { useThemeStore } from '@/stores/theme';
+import { useGlobalStore } from '@/stores';
 
-const { theme, setSearchEngine } = useThemeStore()
-const engineInfo = computed(() => engineList.find(item => item.code === theme.searchEngine) || {})
+const global = useGlobalStore()
+const currentEngine = computed(() => global.config?.search?.engine || 'bing')
+
+const engineValue = computed({
+  get: () => global.config.search.engine,
+  set: (val: 'bing' | 'baidu') => global.updateConfig('search', {
+    ...global.config.search,
+    engine: val
+  })
+})
+
+const engineInfo = computed(() => engineList.find(item => item.code === engineValue.value) || {})
 const isVisible = ref(false) // 控制搜索引擎弹窗显隐
 const { suggestionIndex } = useSuggestion()
 
 function handleChoose(code: EngineType) {
-  if (code && code !== theme.searchEngine) {
-    setSearchEngine(code)
+  if (code && code !== engineValue.value) {
+    engineValue.value = code
   }
   isVisible.value = false
   suggestionIndex.value = -1

@@ -26,7 +26,7 @@ const engineList = [
 ]
 const engineValue = computed({
   get: () => global.config.search.engine,
-  set: (val: string) => global.updateConfig('search', {
+  set: (val: 'bing' | 'baidu') => global.updateConfig('search', {
     ...global.config.search,
     engine: val
   })

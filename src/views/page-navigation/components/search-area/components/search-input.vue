@@ -21,23 +21,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons-vue'
 import { getFullUrl, getSuggestions } from '../core';
 import { message as toast } from 'ant-design-vue';
 import { useSuggestion } from '../common';
-import { useThemeStore } from '@/stores/theme';
+import { useGlobalStore } from '@/stores';
 
-const { theme } = useThemeStore()
+const global = useGlobalStore()
 
 const { suggestionList, suggestionIndex, getSuggestionList } = useSuggestion()
 /**当前选择的搜索引擎编码 */
 const searchVal = ref('')
 const inputRef = ref()
+const currentEngine = computed(() => global.config?.search?.engine || 'bing')
+
 function onInput (e: Event) {
   const v = (e.target as HTMLInputElement)?.value.trim()
   searchVal.value = v
-  getSuggestionList(theme.searchEngine, searchVal.value)
+  getSuggestionList(currentEngine.value, searchVal.value)
 }
 
 function onClear() {
@@ -69,7 +71,7 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 function onSearch() {
-  const fullUrl = getFullUrl(theme.searchEngine, searchVal.value)
+  const fullUrl = getFullUrl(currentEngine.value, searchVal.value)
   if (fullUrl) {
     window.open(fullUrl)
     onClear()
@@ -89,7 +91,7 @@ function onBlur() {
 }
 async function onFocus() {
   if (!searchVal.value) return
-  suggestionList.value = await getSuggestions(theme.searchEngine, searchVal.value)
+  suggestionList.value = await getSuggestions(currentEngine.value, searchVal.value)
 }
 
 /**关联词向上或向下移动 */

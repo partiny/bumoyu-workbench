@@ -6,14 +6,6 @@
     @cancel="handleClose"
   >
     <div class="min-h-300">
-      <div class="mb-16">
-        <h3 class="mb-8 fw-600">主题切换</h3>
-        <a-radio-group
-          v-model:value="currentTheme"
-          :options="themeOptions"
-          @change="handleChangeTheme"
-        />
-      </div>
       <div>
         <h3 class="mb-8 fw-600">链接备份</h3>
         <a-space>
@@ -42,30 +34,13 @@
 <script setup lang="ts">
 import { ApiBackup } from '@/apis';
 import { http } from '@/utils';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { message as toast } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons-vue';
-import { useThemeStore, navigationTheme } from '@/stores/theme';
 
-const { setTheme, theme } = useThemeStore()
 const visible = defineModel('visible')
-const currentTheme = ref(theme.navigation)
-const themeOptions = computed(() => {
-  const options = []
-  for(let key in navigationTheme) {
-    options.push({
-      label: navigationTheme[key],
-      value: key
-    })
-  }
-  return options
-})
 
-/**切换主题 */
-function handleChangeTheme() {
-  setTheme(currentTheme.value)
-}
 /**关闭弹窗 */
 function handleClose() {
   visible.value = false

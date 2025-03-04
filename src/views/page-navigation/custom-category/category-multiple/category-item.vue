@@ -16,7 +16,7 @@
         @end="e => linkEvent.dragEnd(e, list)"
       >
         <template #item="{ element }">
-          <link-item
+          <custom-link
             :item="element"
             :data-link-id="element.id"
             v-context-menu="linkEvent.getLinkContextMenuProps(element, categoryId)"
@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import type { ContextMenuProps } from '@/directives/context-menu/interface';
 import type { LinkDto, PropType } from '@/views/page-navigation/interface';
-import LinkItem from '@/views/page-navigation/components/link-item/index.vue'
+import CustomLink from '../../custom-link/index.vue'
 import LinkForm from '@/views/page-navigation/components/link-form/link-form.vue';
 import { openNewTab } from '@/utils';
 import draggable from 'vuedraggable'
@@ -71,10 +71,12 @@ const contextMenuProps: ContextMenuProps = {
 </script>
 <style scoped lang="scss">
 .link-list {
+  --link-card-width: 160px;
   display: flex;
   flex-wrap: wrap;
   padding: 24px;
   min-width: 1000px;
+  gap: 10px;
 }
 .v-enter-from {
   transform: translateY(-100vh);

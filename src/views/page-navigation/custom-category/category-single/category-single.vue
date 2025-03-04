@@ -9,9 +9,9 @@
   </main>
 </template>
 <script setup lang="ts">
-import SearchArea from '../components/search-area/search-area.vue';
-import CategoryList from './components/category-list/category-list.vue';
-import LinkForm from '../components/link-form/link-form.vue';
+import SearchArea from '../../components/search-area/search-area.vue';
+import CategoryList from './category-list.vue';
+import LinkForm from '../../components/link-form/link-form.vue';
 import { useCategory } from '@/views/page-navigation/hooks/category';
 
 const {

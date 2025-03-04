@@ -23,7 +23,7 @@ export default {
   /**搜索配置 */
   search: {
     /**搜索引擎 */
-    engine: 'bing'
+    engine: 'bing' as 'bing' | 'baidu'
   },
   /**菜单 */
   menu: {
