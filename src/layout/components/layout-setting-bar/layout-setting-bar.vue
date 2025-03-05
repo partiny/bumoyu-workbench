@@ -42,16 +42,17 @@ import { computed, onBeforeMount, ref, shallowRef } from 'vue';
 import SettingTheme from './components/setting-theme.vue'
 import SettingNavigation from './components/setting-navigation.vue';
 import SettingSearch from './components/setting-search.vue';
-import SettingMenu from './components/setting-menu.vue';
+import SettingSidebar from './components/setting-sidebar.vue';
 import { useGlobalStore } from '@/stores';
 
 const global = useGlobalStore()
 const isDrawerShow = ref(false)
 const menuList = shallowRef([
-  { id: 4, name: '主题', component: SettingTheme },
+  // { id: 4, name: '主题', component: SettingTheme },
   { id: 1, name: '导航', component: SettingNavigation },
   { id: 2, name: '搜索', component: SettingSearch },
-  { id: 3, name: '菜单', component: SettingMenu },
+  { id: 3, name: '侧边栏', component: SettingSidebar },
+  { id: 4, name: '主题' },
   { id: 5, name: '计划' },
   { id: 6, name: '关于' }
 ])

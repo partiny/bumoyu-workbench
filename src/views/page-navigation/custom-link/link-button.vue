@@ -27,7 +27,6 @@ defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  // margin: 0 18px 18px 0;
   &.ghost {
     opacity: 0;
   }
@@ -68,6 +67,7 @@ defineProps({
     text-overflow: ellipsis;
     overflow: hidden;
     pointer-events: none;
+    width: 100%;
   }
 }
 </style>

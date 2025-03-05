@@ -10,8 +10,8 @@
   </main>
 </template>
 <script setup lang="ts">
-import LayoutSidebar from '@/components/layout-sidebar.vue'
-import LayoutSettingBar from '@/components/layout-setting-bar/layout-setting-bar.vue';
+import LayoutSidebar from './components/layout-sidebar.vue'
+import LayoutSettingBar from './components/layout-setting-bar/layout-setting-bar.vue';
 </script>
 <style scoped lang="scss">
 .layout-container {

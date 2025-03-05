@@ -1,5 +1,12 @@
 <template>
-  <div class="layout-sidebar" :class="{ fold: isFold }" @click="isFold = !isFold">
+  <div
+    class="layout-sidebar"
+    :class="{
+      expand: triggerValue === 'click' && !isFold,
+      hover: triggerValue === 'hover'
+    }"
+    @click="triggerFold"
+  >
     <ul class="menu-list">
       <li
         v-for="item in menuList"
@@ -39,8 +46,6 @@
       </div>
     </div>
   </div>
-  <!-- 设置弹窗 -->
-  <setting-modal v-model:visible="isSettingModalShow" />
   <!-- 历史备份记录弹窗 -->
   <backup-modal v-model:visible="isBackupModalShow" />
 </template>
@@ -49,11 +54,12 @@ import IconNav from '@/assets/images/IconNav.svg'
 import IconUserInfo from '@/assets/images/IconUserInfo.svg'
 import { useRouter } from 'vue-router';
 import { getUserInfo, removeToken } from '@/utils';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { ClockCircleOutlined, SettingOutlined, FileTextOutlined } from '@ant-design/icons-vue';
 import BackupModal from '@/views/page-navigation/components/backup-modal.vue';
-import SettingModal from '@/views/page-navigation/components/setting-modal.vue';
+import { useGlobalStore } from '@/stores';
 
+const global = useGlobalStore()
 const router = useRouter()
 const menuList = [
   { id: 3, name: '导航', icon: IconNav, url: '/navigation' }
@@ -84,13 +90,34 @@ const extraMenuList = [
     }
   }
 ]
-const isFold = ref(true) // 是否折叠
 const isBackupModalShow = ref(false) // 控制历史备份记录弹窗显隐
 const isSettingModalShow = ref(false) // 控制设置弹窗显隐
+// 侧边栏是否折叠
+const isFold = computed({
+  get: () => global.config.sidebar.fold,
+  set: (val: boolean) => global.updateConfig('sidebar', {
+    ...global.config.sidebar,
+    fold: val
+  })
+})
+// 触发方式
+const triggerValue = computed({
+  get: () => global.config.sidebar.trigger,
+  set: (val: string) => global.updateConfig('sidebar', {
+    ...global.config.sidebar,
+    trigger: val
+  })
+})
 
 function handleChange(url: string) {
   if (router.currentRoute.value.fullPath === url) return
   router.push(url)
+}
+/**触发侧边栏展开/收起 */
+function triggerFold() {
+  if (triggerValue.value === 'click') {
+    isFold.value = !isFold.value
+  }
 }
 function handleSignOut() {
   removeToken()
@@ -100,7 +127,8 @@ function handleSignOut() {
 <style scoped lang="scss">
 .layout-sidebar {
   --layout-sidebar-width: 60px;
-  width: var(--layout-sidebar-width);
+  width: 8px;
+  opacity: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -110,25 +138,19 @@ function handleSignOut() {
   transition: all .8s;
   overflow: hidden;
   cursor: pointer;
-  &.fold {
-    width: 8px;
-    opacity: 0;
+  &.expand, &.hover:hover {
+    width: var(--layout-sidebar-width);
+    opacity: 1;
     > .menu-list {
-      display: none;
-    }
-    > .menu-theme {
-      display: none;
-    }
-    > .menu-userinfo {
-      display: none;
+      display: flex!important;
     }
     > .bottom-list {
-      display: none;
+      display: flex!important;
     }
   }
 }
 .menu-list {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   row-gap: 40px;
@@ -164,7 +186,7 @@ function handleSignOut() {
   }
 }
 .bottom-list {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   margin-top: auto;

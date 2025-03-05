@@ -5,6 +5,29 @@
     :footer="null"
     @cancel="handleClose"
   >
+    <a-space class="mb-12">
+      <a-tooltip title="导入本地分类及链接数据（支持 iTab 数据）">
+        <a-button class="flex items-center" size="small" @click="handleImport">
+          <template #icon>
+            <UploadOutlined class="font-size-12" />
+          </template>
+          <span class="font-size-12">导入本地数据</span>
+        </a-button>
+      </a-tooltip>
+      <a-tooltip title="导出当前分类及链接数据">
+        <a-button
+          class="flex items-center"
+          size="small"
+          :loading="downloadLoading"
+          @click="handleDownloadCurrent"
+        >
+          <template #icon>
+            <DownloadOutlined class="font-size-12" />
+          </template>
+          <span class="font-size-12">导出到本地</span>
+        </a-button>
+      </a-tooltip>
+    </a-space>
     <p class="backup-tips">备份记录包含手动备份（用户点击备份按钮）和自动备份（用户对链接分类和链接进行新增、修改、删除操作）的数据。</p> 
     <a-table
       :dataSource="table.list"
@@ -31,7 +54,7 @@
 <script setup lang="ts">
 import { ApiBackup } from '@/apis';
 import { http } from '@/utils';
-import { reactive, watch } from 'vue';
+import { reactive, watch, ref } from 'vue';
 import { Modal, message as toast, type PaginationProps } from 'ant-design-vue'
 import type { PagingResponse } from '@/utils/http/interface';
 import { useCategory } from '../hooks/category';
@@ -169,6 +192,30 @@ function handleClose() {
   pagination.pageNum = 1
   pagination.pageSize = 10
   pagination.total = 0
+}
+/**导入 */
+function handleImport() {
+  (document.querySelector('#category-input') as HTMLInputElement)?.click()
+}
+/**导出 */
+const downloadLoading = ref(false)
+function handleDownloadCurrent() {
+  downloadLoading.value = true
+
+  http.download<unknown, Blob>(ApiBackup.exportCurrentLinkData)
+  .then((res) => {
+    downloadLoading.value = false
+    const url = window.URL.createObjectURL(res as Blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `备份记录${dayjs().format('YYYY-MM-DD_HH_mm')}.bmy`; // 设置下载文件名
+    a.click();
+    window.URL.revokeObjectURL(url);
+  })
+  .catch(error => {
+    downloadLoading.value = false
+    toast.error(error || `下载备份记录数据错误`)
+  })
 }
 </script>
 <style scoped lang="scss">

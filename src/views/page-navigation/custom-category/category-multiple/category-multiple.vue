@@ -19,7 +19,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onBeforeMount, onMounted, onUnmounted } from 'vue';
-import LayoutMenubar from '@/components/layout-menubar.vue';
+import LayoutMenubar from '@/layout/components/layout-menubar.vue';
 import CategoryList from './category-list.vue';
 import CategoryItem from './category-item.vue';
 import type { LinkDto, LinkTreeDto } from '../../interface';

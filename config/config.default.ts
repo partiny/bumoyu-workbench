@@ -25,9 +25,11 @@ export default {
     /**搜索引擎 */
     engine: 'bing' as 'bing' | 'baidu'
   },
-  /**菜单 */
-  menu: {
-    autoHide: 'hide', // 自动隐藏 'hide' | 'show'
-    hideType: 'click', // 'hover' | 'click'
+  /**侧边栏菜单 */
+  sidebar: {
+    /**是否折叠 */
+    fold: true, // true | false
+    /**触发方式 */
+    trigger: 'click', // 'hover' | 'click'
   }
 }
