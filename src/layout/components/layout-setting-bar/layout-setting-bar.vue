@@ -56,7 +56,7 @@ const menuList = shallowRef([
   { id: 5, name: '计划' },
   { id: 6, name: '关于' }
 ])
-const activeMenuId = ref(4)
+const activeMenuId = ref(1)
 
 const activeComponent = computed(() => (menuList.value.find(item => item.id === activeMenuId.value)?.component))
 

@@ -55,7 +55,7 @@ import IconUserInfo from '@/assets/images/IconUserInfo.svg'
 import { useRouter } from 'vue-router';
 import { getUserInfo, removeToken } from '@/utils';
 import { computed, ref } from 'vue';
-import { ClockCircleOutlined, SettingOutlined, FileTextOutlined } from '@ant-design/icons-vue';
+import { ClockCircleOutlined, FileTextOutlined } from '@ant-design/icons-vue';
 import BackupModal from '@/views/page-navigation/components/backup-modal.vue';
 import { useGlobalStore } from '@/stores';
 
@@ -74,14 +74,6 @@ const extraMenuList = [
     }
   },
   {
-    id: 2,
-    name: '设置',
-    icon: SettingOutlined,
-    onClick: () => {
-      isSettingModalShow.value = true
-    }
-  },
-  {
     id: 3,
     name: '历史备份记录',
     icon: ClockCircleOutlined,
@@ -91,7 +83,6 @@ const extraMenuList = [
   }
 ]
 const isBackupModalShow = ref(false) // 控制历史备份记录弹窗显隐
-const isSettingModalShow = ref(false) // 控制设置弹窗显隐
 // 侧边栏是否折叠
 const isFold = computed({
   get: () => global.config.sidebar.fold,
