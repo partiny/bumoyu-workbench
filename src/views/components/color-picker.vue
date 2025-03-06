@@ -11,7 +11,7 @@
           backgroundColor: current,
           ...triggerStyle
         }"
-        @click="showPicker = !showPicker"
+        @click="togglePicker(!showPicker)"
       />
       <template #content>
         <div 
@@ -42,24 +42,36 @@
         </div>
         
         <div class="color-info">
-          <input 
+          <a-input
             type="text" 
-            v-model="current"
-            class="hex-input"
-            @keydown.enter="showPicker = false"
-          >
+            v-model:value="current"
+            class="w-100"
+            size="small"
+            @keydown.enter="togglePicker(false)"
+          />
           <div 
             class="preview-box"
             :style="{ backgroundColor: current }"
           />
-          <a-button class="ml-auto" size="small" @click="handleSelectColor">确定</a-button>
+          <a-button
+            class="ml-auto"
+            size="small"
+            @click="togglePicker(false)"
+          >取消</a-button>
+          <a-button
+            class="ml-auto"
+            type="primary"
+            ghost
+            size="small"
+            @click="handleSelect"
+          >确定</a-button>
         </div>
       </template>
     </a-popover>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, computed } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 
 interface HSV {
   h: number  // 0-360
@@ -70,7 +82,7 @@ interface HSV {
 const props = defineProps({
   modelValue: {
     type: String,
-    default: '#ffffff'
+    default: '#fff'
   },
   triggerStyle: {
     type: Object,
@@ -192,7 +204,7 @@ const handleMouseUp = () => {
   document.removeEventListener('mousemove', updateSat)
   document.removeEventListener('mouseup', handleMouseUp)
 }
-
+/**补全 hex 色值长度 */
 function completeHex(color: string): string {
   // 去除#号并统一处理简写格式
   const hex = color.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (_, r, g, b) => r + r + g + g + b + b)
@@ -200,8 +212,13 @@ function completeHex(color: string): string {
   return `#${hex.replace('#', '').padEnd(6, '0').slice(0, 6).toLowerCase()}`
 }
 
+/**开启/关闭选择器弹出层 */
+function togglePicker(val: boolean) {
+  if (val) Object.assign(hsvColor, hexToHsv(current.value))
+  showPicker.value = val
+}
 /**点击确定选中颜色 */
-function handleSelectColor() {
+function handleSelect() {
   emit('select', current.value)
   showPicker.value = false
 }
@@ -215,12 +232,6 @@ watch(() => props.modelValue, (newVal) => {
 
 watch(hsvColor, () => {
   emit('update:modelValue', hsvToHex(hsvColor.h, hsvColor.s, hsvColor.v))
-})
-
-onMounted(() => {
-  Object.assign(hsvColor, hexToHsv(props.modelValue))
-  console.log('-----------------')
-  console.log(hsvColor, props.modelValue)
 })
 </script>
 <style scoped>
@@ -323,16 +334,9 @@ onMounted(() => {
   align-items: center;
 }
 
-.hex-input {
-  padding: 6px 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 100px;
-}
-
 .preview-box {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 4px;
   border: 1px solid #ddd;
 }

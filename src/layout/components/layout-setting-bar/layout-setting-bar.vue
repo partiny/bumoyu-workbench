@@ -43,6 +43,7 @@ import SettingTheme from './components/setting-theme.vue'
 import SettingNavigation from './components/setting-navigation.vue';
 import SettingSearch from './components/setting-search.vue';
 import SettingSidebar from './components/setting-sidebar.vue';
+import SettingPlan from './components/setting-plan.vue';
 import { useGlobalStore } from '@/stores';
 
 const global = useGlobalStore()
@@ -53,7 +54,7 @@ const menuList = shallowRef([
   { id: 2, name: '搜索', component: SettingSearch },
   { id: 3, name: '侧边栏', component: SettingSidebar },
   { id: 4, name: '主题' },
-  { id: 5, name: '计划' },
+  { id: 5, name: '计划', component: SettingPlan },
   { id: 6, name: '关于' }
 ])
 const activeMenuId = ref(1)

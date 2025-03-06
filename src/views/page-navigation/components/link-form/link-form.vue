@@ -38,7 +38,7 @@
         />
       </a-form-item>
       <a-form-item label="图标颜色">
-        <color-picker v-model:active="form.backgroundColor" />
+        <color-list v-model:active="form.backgroundColor" :colors="colors" />
       </a-form-item>
       <a-form-item label="图标文字">
         <a-input
@@ -87,19 +87,18 @@ import { message as toast } from 'ant-design-vue';
 import { http } from '@/utils';
 import { ApiLink } from '@/apis';
 import { useLink } from '../../hooks/link';
-import ColorPicker from './color-picker.vue';
+import ColorList from './color-list.vue';
 
 const { linkInfo } = useLink()
 const emits = defineEmits(['refresh'])
-const colorList = [
+const colors = [
   'linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),conic-gradient(from 190deg at 57% 40%,#8b6ff4 -96deg,#615ced 41deg,#615ced 207deg,#8b6ff4 264deg,#615ced 401deg)',
-  '#1681ff', '#fbbe23', '#fc4548', '#4b3c36', '#7dac88', '#023373', '#c8ac70', '#372128', '#c82c34', '#054092', '#a3ddb9',
-  '#fff'
+  '#1681ff', '#fbbe23', '#fc4548', '#4b3c36', '#7dac88', '#023373', '#c8ac70', '#372128', '#c82c34', '#054092'
 ]
 const initFormData = () => ({
   url: '',
   name: '',
-  backgroundColor: colorList[0],
+  backgroundColor: colors[0],
   iconText: '',
   src: '',
   srcShow: 0 // 默认不展示图标 1展示 0不展示
@@ -110,7 +109,7 @@ watch(() => linkInfo.form.show, val => {
   if (val && id) {
     form.url = url || ''
     form.name = name || ''
-    form.backgroundColor = backgroundColor || colorList[0]
+    form.backgroundColor = backgroundColor || colors[0]
     form.iconText = iconText || ''
     form.srcShow = srcShow ?? 0
     form.src = src ?? ''
@@ -124,9 +123,13 @@ const faviconLoading = ref(false)
  */
 function handleCancel() {
   linkInfo.form.show = false
-  linkInfo.form.current = {}
-  linkInfo.form.categoryId = ''
-  Object.assign(form, initFormData())
+  // 在弹窗完全关掉之前，数据先清空了，体验上不好，所以加个延迟
+  const timer = setTimeout(() => {
+    clearTimeout(timer)
+    linkInfo.form.current = {}
+    linkInfo.form.categoryId = ''
+    Object.assign(form, initFormData())
+  }, 100)
 }
 /**
  * 提交表单
@@ -148,7 +151,7 @@ function handleConfirm() {
     params.id = id
   }
   if (!params.backgroundColor) {
-    params.backgroundColor = colorList[0]
+    params.backgroundColor = colors[0]
   }
   if (!params.iconText) {
     params.iconText = form.name.substring(0, 6)

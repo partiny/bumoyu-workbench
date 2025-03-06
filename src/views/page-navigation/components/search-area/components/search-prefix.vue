@@ -64,6 +64,7 @@ function handleChoose(code: EngineType) {
   width: 300px;
   display: flex;
   flex-wrap: wrap;
+  gap: 4px;
 }
 .engine-item {
   font-size: 12px;
