@@ -38,19 +38,7 @@
         />
       </a-form-item>
       <a-form-item label="图标颜色">
-        <ul class="color-list">
-          <li
-            v-for="(item, index) in colorList"
-            :key="index"
-            class="color-item"
-            :style="{
-              background: item
-            }"
-            @click="form.backgroundColor = item"
-          >
-            <CheckOutlined v-if="form.backgroundColor === item" class="icon-checked" />
-          </li>
-        </ul>
+        <color-picker v-model:active="form.backgroundColor" />
       </a-form-item>
       <a-form-item label="图标文字">
         <a-input
@@ -94,12 +82,12 @@
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue';
 import LinkItem from '../link-item/index.vue'
-import { CheckOutlined } from '@ant-design/icons-vue'
 import type { LinkDto } from '../../interface';
 import { message as toast } from 'ant-design-vue';
 import { http } from '@/utils';
 import { ApiLink } from '@/apis';
 import { useLink } from '../../hooks/link';
+import ColorPicker from './color-picker.vue';
 
 const { linkInfo } = useLink()
 const emits = defineEmits(['refresh'])
@@ -223,26 +211,5 @@ function handleFaviconSwitchChange(checked: number) {
 }
 </script>
 <style scoped lang="scss">
-.color-list {
-  display: flex;
-  column-gap: 10px;
-}
-.color-item {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #333;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: .4s ease;
-  &:hover {
-    transform: scale(1.1);
-  }
-  .icon-checked {
-    font-size: 10px;
-    color: #fff;
-  }
-}
+
 </style>
