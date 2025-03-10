@@ -30,7 +30,7 @@ import { useGlobalStore } from '@/stores';
 
 const global = useGlobalStore()
 
-const { suggestionList, suggestionIndex, getSuggestionList } = useSuggestion()
+const { suggestionList, suggestionIndex, getSuggestionList, isAbort } = useSuggestion()
 /**当前选择的搜索引擎编码 */
 const searchVal = ref('')
 const inputRef = ref()
@@ -39,12 +39,21 @@ const currentEngine = computed(() => global.config?.search?.engine || 'bing')
 function onInput (e: Event) {
   const v = (e.target as HTMLInputElement)?.value.trim()
   searchVal.value = v
+  if (!v) {
+    isAbort.value = true
+    suggestionList.value = []
+    return
+  }
+  isAbort.value = false
+  suggestionIndex.value = -1
   getSuggestionList(currentEngine.value, searchVal.value)
 }
 
 function onClear() {
   searchVal.value = ''
   suggestionList.value = []
+  suggestionIndex.value = -1
+  isAbort.value = true
 }
 /**监听输入框键盘事件 */
 let interval: number
