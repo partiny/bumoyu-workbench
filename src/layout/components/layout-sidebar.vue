@@ -51,6 +51,7 @@
 </template>
 <script setup lang="ts">
 import IconNav from '@/assets/images/IconNav.svg'
+import IconDemand from '@/assets/images/IconDemand.svg'
 import IconUserInfo from '@/assets/images/IconUserInfo.svg'
 import { useRouter } from 'vue-router';
 import { getUserInfo, removeToken } from '@/utils';
@@ -62,7 +63,8 @@ import { useGlobalStore } from '@/stores';
 const global = useGlobalStore()
 const router = useRouter()
 const menuList = [
-  { id: 3, name: '导航', icon: IconNav, url: '/navigation' }
+  { id: 3, name: '导航', icon: IconNav, url: '/navigation' },
+  { id: 4, name: '待办', icon: IconDemand, url: '/todo' }
 ]
 const extraMenuList = [
   {

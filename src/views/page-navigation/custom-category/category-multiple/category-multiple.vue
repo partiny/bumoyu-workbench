@@ -1,7 +1,7 @@
 <!-- 链接样式 - 多页面 -->
 <template>
   <section class="flex h-100%">
-    <layout-menubar>
+    <layout-menubar v-model:fold="isFold">
       <category-list
         :active-id="activeId"
         @change="handleCategoryChange"
@@ -27,6 +27,7 @@ import { throttle } from '@/utils';
 import SearchArea from '../../components/search-area/search-area.vue';
 import { useCategory } from '@/views/page-navigation/hooks/category';
 
+const isFold = ref(true)
 const {
   category,
   categoryEvent

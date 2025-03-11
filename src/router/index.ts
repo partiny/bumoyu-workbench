@@ -24,6 +24,14 @@ const router = createRouter({
           meta: {
             title: '导航'
           }
+        },
+        {
+          path: '/todo',
+          name: 'Todo',
+          component: () => import('@/views/page-todo/page-todo.vue'),
+          meta: {
+            title: '待办'
+          }
         }
       ]
     },
