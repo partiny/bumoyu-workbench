@@ -28,7 +28,7 @@
             }"
             @click="selectDate(date)"
           >
-            {{ date.day }}
+            <div class="date-cell-main">{{ date.day }}</div>
           </div>
         </div>
       </div>
@@ -101,11 +101,6 @@ function handleToday() {
 </script>
 
 <style lang="scss" scoped>
-$gray-5: #999;
-$blue-1: #e6f4ff;
-$blue-6: #1677ff;
-$hover-bg: #f5f5f5;
-
 .calendar-wrap {
   .calendar-main {
     display: flex;
@@ -118,7 +113,7 @@ $hover-bg: #f5f5f5;
       text-align: center;
       padding: 8px 0;
       font-size: 14px;
-      color: $gray-5;
+      color: var(--qt-text-2);
     }
 
     .calendar-grid {
@@ -134,23 +129,42 @@ $hover-bg: #f5f5f5;
         cursor: pointer;
         border-radius: 4px;
         transition: all 0.2s;
-        font-size: 14px;
+        font-size: 13px;
 
+        &-main {
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all .3s;
+          color: var(--qt-text-1);
+        }
         &:hover {
-          background-color: $hover-bg;
+          .date-cell-main {
+            background-color: var(--qt-sub-color);
+            color: #fff;
+          }
         }
 
         &.other-month {
-          color: $gray-5;
+          .date-cell-main {
+            color: #cccdd2;
+          }
         }
 
         &.today {
-          background-color: $blue-1;
-          font-weight: 500;
+          .date-cell-main {
+            background-color: var(--qt-primary-color);
+            color: #fff;
+          }
         }
 
         &.selected {
-          border: 2px solid $blue-6;
+          .date-cell-main {
+            border: 1px solid var(--qt-primary-color);
+          }
         }
       }
     }
