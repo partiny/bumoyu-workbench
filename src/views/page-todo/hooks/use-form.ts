@@ -1,19 +1,23 @@
+import { ApiTodo } from "@/apis";
+import { http } from "@/utils";
 import { Form } from "ant-design-vue";
 import dayjs from "dayjs";
 import { reactive, ref } from "vue";
+import { message as toast } from "ant-design-vue";
 
 const visible = ref(false)
 const initForm = () => {
   return {
     title: '', // 待办标题
-    type: '', // 待办类型
+    type: 'work', // 待办类型
     content: '', // 待办内容
     dateTime: dayjs()
     .startOf('hour')
     .minute(Math.floor(dayjs().minute() / 30) * 30)
-    .add(30, 'minute'), // 初始化为最近的整点或半点
-    status: 0, // 待办状态
-    priority: 0, // 待办优先级
+    .add(30, 'minute')
+    .format('YYYY-MM-DD HH:mm'), // 初始化为最近的整点或半点
+    status: 'pending', // 待办状态
+    priority: 'medium', // 待办优先级
   }
 }
 const form = reactive(initForm())
@@ -26,15 +30,28 @@ function handleFormAdd() {
 function handleFormEdit() {
   visible.value = true
 }
-/**关闭待办抽屉 */
-// function handleFormClose() {
-//   visible.value = false
-//   Object.assign(form, initForm())
-  
-// }
 /**重置表单 */
 function resetForm() {
   Object.assign(form, initForm())
+}
+/**获取待办 */
+function getTodoList() {
+  return new Promise((resolve, reject) => {
+    http.get(ApiTodo.getAllTodoList)
+      .then(res => {
+        const { success, message, data } = res
+        if (!success) {
+          toast.error(message || '获取待办错误')
+          resolve([])
+          return
+        }
+        resolve(data || [])
+      })
+      .catch(error => {
+        toast.error(error || '获取待办错误')
+        resolve([])
+      })
+  })
 }
 
 export default () => ({
@@ -44,6 +61,6 @@ export default () => ({
   // validate,
   handleFormAdd,
   handleFormEdit,
-  resetForm
-  // handleFormClose
+  resetForm,
+  getTodoList
 })
