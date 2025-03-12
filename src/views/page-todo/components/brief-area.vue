@@ -5,10 +5,10 @@
       <div class="flex items-center justify-between mb-16">
         <span class="font-size-14">{{ currentMonth }}</span>
         <div class="flex items-center gap-8">
-          <a-button size="small" @click="handleToday">今天</a-button>
+          <a-button type="primary" ghost size="small" @click="backToToday">今天</a-button>
           <a-space>
-            <a-button size="small" @click="changeMonth(-1)"><</a-button>
-            <a-button size="small" @click="changeMonth(1)">></a-button>
+            <a-button type="primary" ghost size="small" @click="changeMonth(-1)"><</a-button>
+            <a-button type="primary" ghost size="small" @click="changeMonth(1)">></a-button>
           </a-space>
         </div>
       </div>
@@ -37,67 +37,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
+import useCalendar from '../hooks/use-calendar';
 
-const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
-const currentDate = ref<Dayjs>(dayjs());
-const selectedDate = ref<Dayjs | null>(null);
-
-const currentMonth = computed(() => currentDate.value.format('YYYY年MM月'));
-
-const calendarDates = computed(() => {
-  const startOfMonth = currentDate.value.startOf('month');
-  const endOfMonth = currentDate.value.endOf('month');
-  const today = dayjs();
-
-  // 生成6周（42天）的日期数组
-  const dates = [];
-  const startDay = startOfMonth.day();
-  
-  // 添加上月补全日期
-  for (let i = startDay - 1; i >= 0; i--) {
-    const date = startOfMonth.subtract(i + 1, 'day');
-    dates.push(createDateObject(date, false, today));
-  }
-
-  // 添加当月日期
-  for (let d = startOfMonth; d.isBefore(endOfMonth); d = d.add(1, 'day')) {
-    dates.push(createDateObject(d, true, today));
-  }
-
-  // 添加下月补全日期
-  const remaining = 42 - dates.length;
-  for (let i = 1; i <= remaining; i++) {
-    const date = endOfMonth.add(i, 'day');
-    dates.push(createDateObject(date, false, today));
-  }
-
-  return dates;
-});
-
-function createDateObject(date: Dayjs, isCurrentMonth: boolean, today: Dayjs) {
-  return {
-    date,
-    day: date.date(),
-    isCurrentMonth,
-    isToday: date.isSame(today, 'day'),
-    isSelected: selectedDate.value?.isSame(date, 'day')
-  };
-}
+const {
+  weekDays,
+  selectedDate,
+  currentMonth,
+  calendarDates,
+  backToToday,
+  changeMonth
+} = useCalendar()
 
 function selectDate(date: { date: Dayjs }) {
   selectedDate.value = date.date;
 }
 
-function changeMonth(offset: number) {
-  currentDate.value = currentDate.value.add(offset, 'month');
-}
 
-function handleToday() {
-  currentDate.value = dayjs();
-  selectedDate.value = null;
-}
 </script>
 
 <style lang="scss" scoped>
@@ -144,7 +100,7 @@ function handleToday() {
         &:hover {
           .date-cell-main {
             background-color: var(--qt-sub-color);
-            color: #fff;
+            color: var(--qt-primary-color);
           }
         }
 
@@ -163,7 +119,8 @@ function handleToday() {
 
         &.selected {
           .date-cell-main {
-            border: 1px solid var(--qt-primary-color);
+            background-color: var(--qt-primary-color);
+            color: #fff;
           }
         }
       }
