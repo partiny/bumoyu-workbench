@@ -1,3 +1,5 @@
 <template>
-  <div>待开发</div>
+  <div class="pt-100">
+    <a-empty description="功能待开放" />
+  </div>
 </template>

@@ -28,15 +28,18 @@
         class="calendar-item"
         :class="{
           'other-month': !date.isCurrentMonth,
-          'today': date.isToday
+          'today': date.isToday,
+          'before-today': date.isBeforeToday
         }"
+        @click="handleFormAdd(date.date)"
       >
         <div class="calendar-item-date"><span>{{ date.day }}</span>日</div>
-        <ul class="todo-list">
+        <ul v-if="date.todoList.length" class="todo-list">
           <li 
-            v-for="(todo, idx) in todos" 
+            v-for="(todo, idx) in date.todoList" 
             :key="idx"
             class="todo-item"
+            @click.stop="handleFormView(todo)"
           >
             {{ todo.title }}
           </li>
@@ -47,24 +50,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
 import useCalendar from '../hooks/use-calendar';
 import useForm from '../hooks/use-form';
 
 const {
-  currentDate,
   weekDays,
   currentMonth,
   calendarDates,
   changeMonth
 } = useCalendar()
-const { handleFormAdd } = useForm()
-
-const todos = ref([
-  { title: '团队会议', time: '10:00' },
-  { title: '项目评审', time: '14:30' },
-  { title: '客户沟通', time: '16:00' }
-]);
+const { handleFormAdd, handleFormView } = useForm()
 </script>
 
 <style lang="scss" scoped>
@@ -144,13 +139,18 @@ const todos = ref([
 .todo-item {
   font-size: 10px;
   padding: 1px 4px;
-  background-color: var(--qt-bg-gray);
   border-radius: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   &:hover {
     background-color: var(--qt-sub-color);
+  }
+}
+.calendar-item.before-today .todo-item {
+  color: var(--qt-text-2);
+  &:hover {
+    background-color: rgba(145, 137, 250, .5);
   }
 }
 </style>

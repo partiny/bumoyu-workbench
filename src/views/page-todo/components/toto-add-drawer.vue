@@ -5,6 +5,7 @@
     placement="right"
     :closable="false"
     width="500px"
+    @close="handleFormClose"
   >
     <template #extra>
       <a-button
@@ -15,113 +16,132 @@
         @click="handleFormClose"
       />
     </template>
-    <a-form
-      ref="formRef"
-      :model="form"
-      @submit.prevent="handleFormSubmit"
-      :label-col="{ span: 5 }"
-      :wrapper-col="{ span: 19 }"
-    >
-      <a-form-item 
-        name="title" 
-        label="待办标题"
-        :rules="[{ required: true, message: '请输入待办标题' }]"
+    <a-spin :spinning="loading">
+      <a-form
+        ref="formRef"
+        :model="form"
+        @submit.prevent="handleFormSubmit"
+        :label-col="{ span: 5 }"
+        :wrapper-col="{ span: 19 }"
       >
-        <a-input v-model:value="form.title" placeholder="请输入待办标题" />
-      </a-form-item>
+        <a-form-item 
+          name="title" 
+          label="待办标题"
+          :rules="[{ required: true, message: '请输入待办标题' }]"
+        >
+          <a-input v-model:value="form.title" :maxlength="100" allow-clear placeholder="请输入待办标题" />
+        </a-form-item>
 
-      <a-form-item label="待办类型" name="type">
-        <a-select v-model:value="form.type" placeholder="请选择类型">
-          <a-select-option value="work">工作</a-select-option>
-          <a-select-option value="personal">个人</a-select-option>
-          <a-select-option value="other">其他</a-select-option>
-        </a-select>
-      </a-form-item>
+        <a-form-item label="待办类型" name="type">
+          <a-select v-model:value="form.type" placeholder="请选择类型">
+            <a-select-option
+              v-for="item in todoTypeList" 
+              :key="item.code"
+              :value="item.code"
+            >{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
 
-      <a-form-item label="待办内容" name="content">
-        <a-textarea 
-          v-model:value="form.content" 
-          placeholder="请输入详细内容"
-          :rows="4"
-        />
-      </a-form-item>
-
-      <a-form-item label="日期时间" name="dateTime">
-        <div class="flex gap-10">
-          <a-date-picker 
-            v-model:value="form.dateTime" 
-            placeholder="选择日期"
-            show-time
-            :minute-step="30"
-            format="YYYY-MM-DD HH:mm"
-            value-format="YYYY-MM-DD HH:mm"
-            :show-now="false"
-            :allow-clear="false"
+        <a-form-item label="待办内容" name="content">
+          <a-textarea 
+            v-model:value="form.content" 
+            placeholder="请输入详细内容"
+            :rows="4"
           />
-        </div>
-      </a-form-item>
-      <a-form-item label="状态" name="status">
-        <a-select v-model:value="form.status" placeholder="请选择类型">
-          <a-select-option value="pending">待定</a-select-option>
-          <a-select-option value="completed">已完成</a-select-option>
-          <a-select-option value="archived">已归档</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="优先级" name="priority">
-        <a-radio-group v-model:value="form.priority">
-          <a-radio value="low">低</a-radio>
-          <a-radio value="medium">中</a-radio>
-          <a-radio value="high">高</a-radio>
-        </a-radio-group>
-      </a-form-item>
-    </a-form>
+        </a-form-item>
+
+        <a-form-item label="待办日期" name="dateTime">
+          <div class="flex gap-10">
+            <a-date-picker 
+              v-model:value="form.dateTime" 
+              placeholder="选择日期"
+              :show-time="{ format: 'HH:mm' }"
+              :minute-step="30"
+              format="YYYY-MM-DD HH:mm"
+              value-format="YYYY-MM-DD HH:mm"
+              :show-now="false"
+              :allow-clear="false"
+            />
+          </div>
+        </a-form-item>
+        <a-form-item label="状态" name="status">
+          <a-select v-model:value="form.status" placeholder="请选择类型">
+            <a-select-option
+              v-for="item in todoStatusList" 
+              :key="item.code"
+              :value="item.code"
+            >{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="优先级" name="priority">
+          <a-radio-group v-model:value="form.priority">
+            <a-radio
+              v-for="item in todoPriorityList" 
+              :key="item.code"
+              :value="item.code"
+            >{{ item.name }}</a-radio>
+          </a-radio-group>
+        </a-form-item>
+      </a-form>
+    </a-spin>
     <template #footer>
-      <a-space>
+      <div class="flex justify-end gap-10">
         <a-button @click="handleFormClose">取消</a-button>
-        <a-button type="primary" @click="handleFormSubmit">确定</a-button>
-      </a-space>
+        <a-button type="primary" :loading="loading" @click="handleFormSubmit">确定</a-button>
+      </div>
     </template>
   </a-drawer>
 </template>
 <script setup lang="ts">
-import { h, ref } from 'vue';
+import { computed, h, ref } from 'vue';
 import useForm from '../hooks/use-form';
 import { CloseOutlined } from '@ant-design/icons-vue';
 import { http } from '@/utils';
 import { ApiTodo } from '@/apis'
 import { message as toast } from 'ant-design-vue';
+import useTodo from '../hooks/use-todo';
 
-const { visible, form, resetForm } = useForm()
-const isEdit = ref(false)
+const { visible, previewVisible, form, resetForm } = useForm()
+const {
+  initTodo,
+  todoTypeList,
+  todoPriorityList,
+  todoStatusList
+ } = useTodo()
+const isEdit = computed(() => !!form.id)
 const formRef = ref()
 const loading = ref(false)
-const emits = defineEmits(['refresh'])
 
 /**提交表单 */
 function handleFormSubmit() {
   formRef.value?.validate().then(() => {
     loading.value = true
-    http.post(ApiTodo.addTodo, form)
+    const text = isEdit.value ? '编辑' : '新增'
+    http.post(
+      isEdit.value ? ApiTodo.updateTodo : ApiTodo.addTodo,
+      form
+    )
       .then(res => {
         loading.value = false
         const { success, message } = res
         if (!success) {
-          toast.error(message || `新增待办请求错误`)
+          toast.error(message || `${text}请求错误`)
           return
         }
-        toast.success(`新增待办成功`)
+        toast.success(`${text}成功`)
         handleFormClose()
-        emits('refresh')
+        initTodo()
       })
       .catch(error => {
         loading.value = false
-        toast.error(error || `新增待办请求错误`)
+        toast.error(error || `${text}请求错误`)
       })
   }).catch(() => {})
 }
 /**关闭抽屉 */
 function handleFormClose() {
   visible.value = false
+  if (previewVisible.value) return
   formRef.value?.resetFields()
   resetForm()
 }

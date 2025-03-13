@@ -11,13 +11,13 @@ import LayoutMenubar from '@/layout/components/layout-menubar.vue';
 import BriefArea from './components/brief-area.vue';
 import ContentArea from './components/content-area.vue';
 import { ref, onBeforeMount } from 'vue';
-import useForm from './hooks/use-form';
+import useTodo from './hooks/use-todo';
 
 const fold = ref(false);
-const { getTodoList } = useForm()
+const { initTodo } = useTodo()
 
-onBeforeMount(async () => {
-  const list = await getTodoList()
+onBeforeMount(() => {
+  initTodo()
 })
 </script>
 <style scoped lang="scss">

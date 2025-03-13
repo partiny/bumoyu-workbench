@@ -13,7 +13,7 @@
           class="ml-auto items-center flex"
           type="primary"
           :icon="h(PlusOutlined)"
-          @click="handleFormAdd"
+          @click="handleFormAdd()"
         >新增待办</a-button>
       </div>
       <!-- 日维度展示 -->
@@ -23,17 +23,20 @@
       <!-- 月维度展示 -->
       <content-month v-if="segmented.current === 'month'" />
     </div>
+    <!-- 预览待办抽屉 -->
+    <todo-preview-drawer />
     <!-- 新增/编辑待办抽屉 -->
     <todo-add-drawer />
   </section>
 </template>
 
 <script setup lang="ts">
-import { h, reactive, ref } from 'vue';
+import { h, reactive } from 'vue';
 import ContentDay from './content-day.vue'
 import ContentWeek from './content-week.vue'
 import ContentMonth from './content-month.vue'
 import TodoAddDrawer from './toto-add-drawer.vue'
+import TodoPreviewDrawer from './todo-preview-drawer.vue'
 import { PlusOutlined } from '@ant-design/icons-vue';
 import useForm from '../hooks/use-form';
 

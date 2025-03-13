@@ -1,11 +1,11 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { computed, ref } from "vue"
+import useTodo from './use-todo';
 
-
+const { todoList } = useTodo()
 const weekDays = ['日', '一', '二', '三', '四', '五', '六']
 const currentDate = ref<Dayjs>(dayjs())
 const selectedDate = ref<Dayjs>(dayjs())
-
 const currentMonth = computed(() => currentDate.value.format('YYYY年MM月'))
 const calendarDates = computed(() => {
   const startOfMonth = currentDate.value.startOf('month');
@@ -41,8 +41,10 @@ function createDateObject(date: Dayjs, isCurrentMonth: boolean, today: Dayjs) {
     date,
     day: date.date(),
     isCurrentMonth,
+    isBeforeToday: date.isBefore(today, 'day'),
     isToday: date.isSame(today, 'day'),
-    isSelected: selectedDate.value?.isSame(date, 'day')
+    isSelected: selectedDate.value?.isSame(date, 'day'),
+    todoList: todoList.value.filter(item => item.dateTime && dayjs(item.dateTime).isSame(date, 'day'))
   };
 }
 /**回到今天 */
