@@ -44,7 +44,15 @@ function createDateObject(date: Dayjs, isCurrentMonth: boolean, today: Dayjs) {
     isBeforeToday: date.isBefore(today, 'day'),
     isToday: date.isSame(today, 'day'),
     isSelected: selectedDate.value?.isSame(date, 'day'),
-    todoList: todoList.value.filter(item => item.dateTime && dayjs(item.dateTime).isSame(date, 'day'))
+    todoList: todoList.value.filter(item => {
+      const [start, end] = item.rangeTime || []
+      return (
+        start &&
+        end &&
+        dayjs(start).isBefore(date.add(1, 'day'), 'day') &&
+        dayjs(end).isAfter(date.subtract(1, 'day'), 'day')
+      )
+    })
   };
 }
 /**回到今天 */

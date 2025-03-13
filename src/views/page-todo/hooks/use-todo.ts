@@ -36,7 +36,10 @@ function getTodoList(): Promise<TodoItem[]> {
           resolve([])
           return
         }
-        resolve(data || [])
+        resolve((data || []).map(item => ({
+          ...item,
+          rangeTime: item.startTime && item.endTime ? [item.startTime, item.endTime] : []
+        })))
       })
       .catch(error => {
         toast.error(error || '获取待办错误')

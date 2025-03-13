@@ -30,7 +30,7 @@
     </a-row>
     <a-row class="mb-10">
       <a-col :span="5">日期时间</a-col>
-      <a-col :span="19">{{ form.dateTime ?? '-' }}</a-col>
+      <a-col :span="19">{{ form.rangeTime?.length ? `${form.rangeTime[0]} - ${form.rangeTime[1]}` : '-' }}</a-col>
     </a-row>
     <a-row class="mb-10">
       <a-col :span="5">状态</a-col>

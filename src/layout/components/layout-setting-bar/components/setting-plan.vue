@@ -41,13 +41,13 @@ const table = reactive({
     {
       id: 3,
       feature: '导航弹窗新增颜色选择器',
-      status: 2,
+      status: 3,
       time: '03-06'
     },
     {
       id: 4,
       feature: '增加版本更新日志',
-      status: 2,
+      status: 3,
       time: '03-06'
     },
     {
@@ -72,6 +72,12 @@ const table = reactive({
       id: 8,
       feature: '新增体重记录模块',
       status: 0,
+      time: '-'
+    },
+    {
+      id: 9,
+      feature: '新增待办功能',
+      status: 3,
       time: '-'
     }
   ],

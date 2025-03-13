@@ -5,6 +5,7 @@
     placement="right"
     :closable="false"
     width="500px"
+    :z-index="1001"
     @close="handleFormClose"
   >
     <template #extra>
@@ -50,14 +51,14 @@
           />
         </a-form-item>
 
-        <a-form-item label="待办日期" name="dateTime">
+        <a-form-item label="待办日期" name="rangeTime">
           <div class="flex gap-10">
-            <a-date-picker 
-              v-model:value="form.dateTime" 
-              placeholder="选择日期"
+            <a-range-picker 
+              v-model:value="form.rangeTime" 
+              :placeholder="['开始日期', '结束日期']"
               :show-time="{ format: 'HH:mm' }"
               :minute-step="30"
-              format="YYYY-MM-DD HH:mm"
+              :format="['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm']"
               value-format="YYYY-MM-DD HH:mm"
               :show-now="false"
               :allow-clear="false"
@@ -119,7 +120,11 @@ function handleFormSubmit() {
     const text = isEdit.value ? '编辑' : '新增'
     http.post(
       isEdit.value ? ApiTodo.updateTodo : ApiTodo.addTodo,
-      form
+      {
+        ...form,
+        startTime: form.rangeTime?.[0] ?? null,
+        endTime: form.rangeTime?.[1] ?? null
+      }
     )
       .then(res => {
         loading.value = false
