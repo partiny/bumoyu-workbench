@@ -1,5 +1,5 @@
 <template>
-  <div class="search-area">
+  <div v-if="!isInIframe" class="search-area">
     <div class="search-main">
       <div class="search-inner">
         <search-prefix />
@@ -7,7 +7,6 @@
       </div>
       <search-suggestion @choose="searchInputRef?.clear()" />
     </div>
-    
   </div>
 </template>
 <script setup lang="ts">
@@ -15,8 +14,10 @@ import SearchPrefix from './components/search-prefix.vue'
 import SearchInput from './components/search-input.vue'
 import SearchSuggestion from './components/search-suggestion.vue'
 import { ref } from 'vue';
+import useBaseInfo from '@/stores/base';
 
 const searchInputRef = ref()
+const { isInIframe } = useBaseInfo()
 </script>
 <style scoped lang="scss">
 .search-area {

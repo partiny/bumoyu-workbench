@@ -7,7 +7,7 @@
     }"
     @click="triggerFold"
   >
-    <ul class="menu-list">
+    <ul v-if="!isInIframe" class="menu-list">
       <li
         v-for="item in menuList"
         :key="item.id"
@@ -34,8 +34,14 @@
         />
       </a-tooltip>
       <div class="menu-userinfo" @click.stop>
-        <a-popover v-if="getUserInfo() && getUserInfo()?.userId" placement="right" trigger="click">
-          <img :src="IconUserInfo" />
+        <a-popover v-if="userInfo?.userId" placement="right" trigger="click">
+          <a-tooltip
+            :title="userInfo.userName || ''"
+            placement="right"
+            :mouse-enter-delay="0.5"
+          >
+            <img :src="IconUserInfo" />
+          </a-tooltip>
           <template #content>
             <ul>
               <li class="popover-item" @click="handleSignOut">退出登录</li>
@@ -59,31 +65,40 @@ import { computed, ref } from 'vue';
 import { ClockCircleOutlined, FileTextOutlined } from '@ant-design/icons-vue';
 import BackupModal from '@/views/page-navigation/components/backup-modal.vue';
 import { useGlobalStore } from '@/stores';
+import useBaseInfo from '@/stores/base';
 
 const global = useGlobalStore()
 const router = useRouter()
+const { isInIframe } = useBaseInfo()
+
+const userInfo = getUserInfo()
 const menuList = [
   { id: 3, name: '导航', icon: IconNav, url: '/navigation' },
   { id: 4, name: '待办', icon: IconDemand, url: '/todo' }
 ]
-const extraMenuList = [
-  {
-    id: 1,
-    name: '文档指南',
-    icon: FileTextOutlined,
-    onClick: () => {
-      window.open(window.location.origin + '/docs')
+const extraMenuList = computed(() => {
+  const base = [
+    {
+      id: 3,
+      name: '历史备份记录',
+      icon: ClockCircleOutlined,
+      onClick: () => {
+        isBackupModalShow.value = true
+      }
     }
-  },
-  {
-    id: 3,
-    name: '历史备份记录',
-    icon: ClockCircleOutlined,
-    onClick: () => {
-      isBackupModalShow.value = true
+  ]
+  const extra = [
+    {
+      id: 1,
+      name: '文档指南',
+      icon: FileTextOutlined,
+      onClick: () => {
+        window.open(window.location.origin + '/docs')
+      }
     }
-  }
-]
+  ]
+  return isInIframe.value ? base: [...extra, ...base]
+})
 const isBackupModalShow = ref(false) // 控制历史备份记录弹窗显隐
 // 侧边栏是否折叠
 const isFold = computed({

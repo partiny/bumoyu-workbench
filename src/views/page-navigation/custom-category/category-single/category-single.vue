@@ -1,5 +1,11 @@
 <template>
-  <main class="wrap" v-context-menu="category.contextMenu.props">
+  <main
+    class="wrap"
+    v-context-menu="category.contextMenu.props"
+    :style="{
+      '--search-area-height': !isInIframe ? '120px' : '20px' 
+    }"
+  >
     <search-area />
     <div class="content">
       <category-list />
@@ -13,15 +19,16 @@ import SearchArea from '../../components/search-area/search-area.vue';
 import CategoryList from './category-list.vue';
 import LinkForm from '../../components/link-form/link-form.vue';
 import { useCategory } from '@/views/page-navigation/hooks/category';
+import useBaseInfo from '@/stores/base';
 
 const {
   category,
   categoryEvent
 } = useCategory()
+const { isInIframe } = useBaseInfo()
 </script>
 <style scoped lang="scss">
 .wrap {
-  --search-area-height: 120px;
   height: 100%;
   display: flex;
   flex-direction: column;

@@ -20,7 +20,7 @@
       <div class="setting-main">
         <ul class="setting-list">
           <li
-            v-for="item in menuList"
+            v-for="item in menuList.filter(menu => !menu.hide)"
             :key="item.id"
             class="setting-item"
             :class="{ 'active': activeMenuId === item.id }"
@@ -39,23 +39,25 @@
 </template>
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, shallowRef } from 'vue';
-import SettingTheme from './components/setting-theme.vue'
+// import SettingTheme from './components/setting-theme.vue'
 import SettingNavigation from './components/setting-navigation.vue';
 import SettingSearch from './components/setting-search.vue';
 import SettingSidebar from './components/setting-sidebar.vue';
 import SettingPlan from './components/setting-plan.vue';
 import { useGlobalStore } from '@/stores';
+import useBaseInfo from '@/stores/base';
 
 const global = useGlobalStore()
 const isDrawerShow = ref(false)
+const { isInIframe } = useBaseInfo()
 const menuList = shallowRef([
   // { id: 4, name: '主题', component: SettingTheme },
-  { id: 1, name: '导航', component: SettingNavigation },
-  { id: 2, name: '搜索', component: SettingSearch },
-  { id: 3, name: '侧边栏', component: SettingSidebar },
-  { id: 4, name: '主题' },
-  { id: 5, name: '计划', component: SettingPlan },
-  { id: 6, name: '关于' }
+  { id: 1, name: '导航', component: SettingNavigation, hide: false },
+  { id: 2, name: '搜索', component: SettingSearch, hide: isInIframe.value },
+  { id: 3, name: '侧边栏', component: SettingSidebar, hide: false },
+  { id: 4, name: '主题', hide: isInIframe.value  },
+  { id: 5, name: '计划', component: SettingPlan, hide: isInIframe.value  },
+  { id: 6, name: '关于', hide: isInIframe.value  }
 ])
 const activeMenuId = ref(1)
 
