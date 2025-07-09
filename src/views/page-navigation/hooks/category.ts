@@ -3,7 +3,7 @@ import type { ContextMenuProps } from "@/directives/context-menu/interface";
 import { http } from "@/utils";
 import type { PagingResponse } from "@/utils/http/interface";
 import type { LinkTreeDto } from "@/views/page-navigation/interface";
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { Modal, message as toast } from 'ant-design-vue'
 
 const props: ContextMenuProps = {

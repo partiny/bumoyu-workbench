@@ -6,8 +6,11 @@ import { useGlobalStore } from '@/stores';
 import LinkCard from './link-card.vue';
 import LinkBar from './link-bar.vue';
 import LinkButton from './link-button.vue';
-import { computed, type Component } from 'vue';
+import { computed, defineComponent, type Component } from 'vue';
 
+defineComponent({
+  name: 'CustomLink'
+})
 const global = useGlobalStore()
 const coms: { [key: string]: Component } = {
   'card': LinkCard,
@@ -15,6 +18,4 @@ const coms: { [key: string]: Component } = {
   'button': LinkButton
 }
 const currentLink = computed(() => global.config?.navigation?.link || 'card')
-
-
 </script>
