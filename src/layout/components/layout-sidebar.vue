@@ -34,18 +34,19 @@
         />
       </a-tooltip>
       <div class="menu-userinfo" @click.stop>
-        <a-popover v-if="userInfo?.userId" placement="right" trigger="click">
-          <a-tooltip
-            :title="userInfo.userName || ''"
-            placement="right"
-            :mouse-enter-delay="0.5"
-          >
-            <img :src="IconUserInfo" />
-          </a-tooltip>
+        <a-popover v-if="userInfo?.userId" placement="rightBottom" trigger="click">
+          <img :src="IconUserInfo" />
           <template #content>
-            <ul>
-              <li class="popover-item" @click="handleSignOut">退出登录</li>
-            </ul>
+            <div class="popover-content">
+              <div class="popover-header">
+                <img :src="IconUserInfo" />
+                <span>{{ userInfo.userName || '' }}</span>
+              </div>
+              <ul>
+                <li class="popover-item" @click="handleSwitchAccount">切换账号</li>
+                <li class="popover-item" @click="handleSignOut">退出登录</li>
+              </ul>
+            </div>
           </template>
         </a-popover>
         <span v-else @click="router.push('/login')">登录</span>
@@ -66,6 +67,7 @@ import { ClockCircleOutlined, FileTextOutlined } from '@ant-design/icons-vue';
 import BackupModal from '@/views/page-navigation/components/backup-modal.vue';
 import { useGlobalStore } from '@/stores';
 import useBaseInfo from '@/stores/base';
+import { message as toast } from 'ant-design-vue';
 
 const global = useGlobalStore()
 const router = useRouter()
@@ -130,6 +132,10 @@ function triggerFold() {
 function handleSignOut() {
   removeToken()
   router.push('/login')
+}
+/**切换账号 */
+function handleSwitchAccount() {
+  toast.info('功能待开发')
 }
 </script>
 <style scoped lang="scss">
@@ -221,12 +227,32 @@ function handleSignOut() {
     border-radius: 50%;
   }
 }
+.popover-content {
+  width: 200px;
+}
+.popover-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 12px;
+  column-gap: 20px;
+  > img {
+    width: 32px;
+    height: 32px;
+  }
+  > span {
+    font-size: 16px;
+  }
+}
 .popover-item {
   cursor: pointer;
   font-size: 12px;
   color: var(--qt-text-1);
-  padding: 6px 10px;
+  padding: 10px;
   border-radius: 8px;
+  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  &:first-child {
+    border-top: none;
+  }
   &:hover {
     background: #f3f2ff;
     color: #615ced;
