@@ -32,6 +32,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@tsconfig/node18": "^18.2.4",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.9.0",
     "@unocss/preset-rem-to-px": "^0.64.1",
