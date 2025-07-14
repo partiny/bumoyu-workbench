@@ -2,6 +2,8 @@
   <component :is="coms[currentValue]"></component>
   <!-- 导航搜索组件 -->
   <navigation-search ref="navigationSearchRef" />
+  <!-- 导航页浮动气泡 -->
+  <floating-bubble />
 </template>
 <script setup lang="ts">
 import CategorySingle from './custom-category/category-single/category-single.vue';
@@ -9,6 +11,7 @@ import CategoryMultiple from './custom-category/category-multiple/category-multi
 import { computed, defineComponent, onMounted, onUnmounted, ref, type Component } from 'vue';
 import { useGlobalStore } from '@/stores';
 import NavigationSearch from './components/navigation-search/navigation-search.vue';
+import FloatingBubble from './components/floating-bubble.vue';
 
 defineComponent({
   name: 'PageNavigation'
@@ -22,19 +25,27 @@ const coms: { [key: string]: Component } = {
 }
 
 const navigationSearchRef = ref()
-// 添加快捷键监听
-let lastKeyPressTime = 0
-const doublePressThreshold = 300 // 300ms内两次按键视为双击
-
 function handleKeyDown(event: KeyboardEvent) {
-  // 处理双击Ctrl逻辑
-  if (event.key === 'Control') {
-    const now = Date.now()
-    if (now - lastKeyPressTime < doublePressThreshold) {
-      event.preventDefault()
-      navigationSearchRef.value?.open()
-    }
-    lastKeyPressTime = now
+  // 快捷键：ctrl + f
+  if (event.ctrlKey && event.key.toLowerCase() === 'f') {
+    event.preventDefault()
+    navigationSearchRef.value?.open()
+  } else if (
+    // 快捷键：ctrl + 左箭头 切换左侧边栏显隐
+    event.ctrlKey && event.key.toLowerCase() === 'arrowleft'
+  ) {
+    global.updateConfig('sidebar', {
+      ...global.config.sidebar,
+      fold: !global.config.sidebar.fold 
+    })
+  } else if (
+    // 快捷键：ctrl + 右箭头 切换右侧边栏显隐
+    event.ctrlKey && event.key.toLowerCase() === 'arrowright'
+  ) {
+    global.updateConfig('settingsBar', {
+      ...global.config.settingsBar,
+      fold: !global.config.settingsBar.fold 
+    })
   }
 }
 

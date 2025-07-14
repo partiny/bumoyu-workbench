@@ -11,7 +11,11 @@ export const useGlobalStore = defineStore('global', () => {
     const localConfig = JSON.parse(localStorage.getItem('LOCAL_CONFIG') || '{}')
 
     if (Object.keys(localConfig).length) {
-      Object.assign(config.value, localConfig)
+      Object.assign(config.value, localConfig, {
+        settingsBar: {
+          fold: true
+        }
+      })
     }
 
     console.log('init-config: ', config.value)

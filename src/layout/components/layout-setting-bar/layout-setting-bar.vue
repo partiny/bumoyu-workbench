@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-setting-bar" @click="isDrawerShow = true"></div>
+  <div class="layout-setting-bar" @click="isDrawerShow = !isDrawerShow"></div>
   <a-drawer
     v-model:open="isDrawerShow"
     placement="right"
@@ -48,7 +48,6 @@ import { useGlobalStore } from '@/stores';
 import useBaseInfo from '@/stores/base';
 
 const global = useGlobalStore()
-const isDrawerShow = ref(false)
 const { isInIframe } = useBaseInfo()
 const menuList = shallowRef([
   // { id: 4, name: '主题', component: SettingTheme },
@@ -60,6 +59,14 @@ const menuList = shallowRef([
   { id: 6, name: '关于', hide: isInIframe.value  }
 ])
 const activeMenuId = ref(1)
+// 侧边栏是否折叠
+const isDrawerShow = computed({
+  get: () => !global.config.settingsBar.fold,
+  set: (val: boolean) => global.updateConfig('settingsBar', {
+    ...global.config.settingsBar,
+    fold: !val
+  })
+})
 
 const activeComponent = computed(() => (menuList.value.find(item => item.id === activeMenuId.value)?.component))
 

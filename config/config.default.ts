@@ -1,5 +1,3 @@
-import type { NavigationType } from './interface'
-
 /**
  * 默认配置，切勿修改！！！
  * 默认配置，切勿修改！！！
@@ -31,5 +29,10 @@ export default {
     fold: true, // true | false
     /**触发方式 */
     trigger: 'click', // 'hover' | 'click'
+  },
+  /**右侧设置侧边栏 */
+  settingsBar: {
+    /**是否折叠 */
+    fold: true, // true | false
   }
 }
