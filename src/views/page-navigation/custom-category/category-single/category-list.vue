@@ -1,11 +1,11 @@
 <template>
   <div class="h-100%">
-    <template v-if="category.requestFinished">
+    <template v-if="categoryInfo.requestFinished">
       <draggable
-        v-if="category.list.length"
+        v-if="categoryInfo.list.length"
         class="category-list"
         tag="div"
-        v-model="category.list"
+        v-model="categoryInfo.list"
         handle=".category-item"
         ghost-class="ghost"
         chosen-class="chosen"
@@ -21,7 +21,7 @@
           />
         </template>
       </draggable>
-      <div v-if="!category.list.length" class="pt-80">
+      <div v-if="!categoryInfo.list.length" class="pt-80">
         <a-empty description="还没有分类，右键新建一个吧~" />
       </div>
     </template>
@@ -32,8 +32,8 @@
   </div>
   <!-- 新增分类弹窗 -->
   <category-form
-    v-model:visible="category.form.show"
-    :category="category.form.current"
+    v-model:visible="categoryInfo.form.show"
+    :category="categoryInfo.form.current"
     @refresh="categoryEvent.getList"
   />
   <!-- 用input实现文件导入 -->
@@ -50,12 +50,12 @@
 import { onBeforeMount } from 'vue';
 import CategoryItem from './category-item.vue'
 import draggable from 'vuedraggable'
-import { useCategory } from '@/views/page-navigation/hooks/category';
+import { useCategory } from '@/views/page-navigation/hooks/use-category';
 import CategoryForm from '@/views/page-navigation/components/category-form/category-form.vue';
 import CategorySkeleton from './category-skeleton.vue';
 
 const {
-  category,
+  categoryInfo,
   categoryEvent
 } = useCategory()
 

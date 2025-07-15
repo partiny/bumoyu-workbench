@@ -25,11 +25,11 @@ import CategoryItem from './category-item.vue';
 import type { LinkDto, LinkTreeDto } from '../../interface';
 import { throttle } from '@/utils';
 import SearchArea from '../../components/search-area/search-area.vue';
-import { useCategory } from '@/views/page-navigation/hooks/category';
+import { useCategory } from '@/views/page-navigation/hooks/use-category';
 
 const isFold = ref(true)
 const {
-  category,
+  categoryInfo,
   categoryEvent
 } = useCategory()
 const activeId = ref('') // 当前选中的分类id
@@ -38,16 +38,16 @@ const linkList = ref<LinkDto[]>([]) // 链接列表
 
 /**鼠标滚轮事件 */
 const handleMouseWheel = throttle((e: Event) => {
-  const length = category.list.length
+  const length = categoryInfo.list.length
   if (!length) return
-  let index = category.list.findIndex(item => item.id === activeId.value)
+  let index = categoryInfo.list.findIndex(item => item.id === activeId.value)
   const y = (e as WheelEvent).deltaY
   if (y > 0) {
     index = index + 1 >= length ? 0 : index + 1
   } else if (y < 0) {
     index = index -1 < 0 ? length - 1 : index - 1
   }
-  handleCategoryChange(category.list[index]?.id || '')
+  handleCategoryChange(categoryInfo.list[index]?.id || '')
 }, 400)
 
 /**切换分类 */
@@ -57,13 +57,13 @@ function handleCategoryChange(id: string) {
 }
 /**获取链接列表 */
 function getLinkList() {
-  linkList.value = category.list.find(item => item.id === activeId.value)?.children || []
+  linkList.value = categoryInfo.list.find(item => item.id === activeId.value)?.children || []
 }
 
 function handleRefresh() {
   categoryEvent.getList().then(() => {
-    if (!activeId.value || !category.list.some(item => item.id === activeId.value)) {
-      activeId.value = category.list[0]?.id || ''
+    if (!activeId.value || !categoryInfo.list.some(item => item.id === activeId.value)) {
+      activeId.value = categoryInfo.list[0]?.id || ''
     }
     getLinkList()
   })

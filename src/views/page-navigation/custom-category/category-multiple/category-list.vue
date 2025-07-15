@@ -1,10 +1,10 @@
 <template>
-  <div class="h-100% p-16 overflow-y-auto" v-context-menu="category.contextMenu.props">
+  <div class="h-100% p-16 overflow-y-auto" v-context-menu="getNavigationContextMenuProps()">
     <draggable
-      v-if="category.list.length"
+      v-if="categoryInfo.list.length"
       class="link-category-list"
       tag="ul"
-      v-model="category.list"
+      v-model="categoryInfo.list"
       handle=".category-item"
       ghost-class="ghost"
       chosen-class="chosen"
@@ -15,7 +15,7 @@
     >
       <template #item="{ element }">
         <li
-          v-context-menu="linkEvent.getCategoryContextMenuProps(element.id)"
+          v-context-menu="getCategoryContextMenuProps(element.id)"
           class="category-item"
           :class="{ 'active': activeId === element.id }"
           draggable="true"
@@ -31,8 +31,8 @@
 
   <!-- 新增分类弹窗 -->
   <category-form
-    v-model:visible="category.form.show"
-    :category="category.form.current"
+    v-model:visible="categoryInfo.form.show"
+    :category="categoryInfo.form.current"
     @refresh="categoryEvent.getList"
   />
   <!-- 用input实现文件导入 -->
@@ -49,8 +49,8 @@
 import type { PropType } from '@/views/page-navigation/interface';
 import CategoryForm from '@/views/page-navigation/components/category-form/category-form.vue';
 import draggable from 'vuedraggable';
-import { useCategory } from '@/views/page-navigation/hooks/category';
-import { useLink } from '@/views/page-navigation/hooks/link';
+import { useCategory } from '@/views/page-navigation/hooks/use-category';
+import useContextMenu from '../../hooks/use-context-menu';
 
 defineProps({
   activeId: {
@@ -60,10 +60,13 @@ defineProps({
 })
 
 const {
-  category,
+  categoryInfo,
   categoryEvent
 } = useCategory()
-const { linkEvent } = useLink()
+const {
+  getNavigationContextMenuProps,
+  getCategoryContextMenuProps
+} = useContextMenu()
 
 const emits = defineEmits(['change'])
 </script>

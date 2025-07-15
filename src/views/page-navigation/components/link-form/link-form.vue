@@ -9,11 +9,24 @@
   >
     <a-form
       :model="form"
+      class="pt-16"
       :label-col="{
         span: 4
       }"
       label-align="left"
     >
+      <a-form-item label="分类">
+        <a-select
+          v-model:value="linkInfo.form.categoryId"
+          placeholder="请选择"
+        >
+          <a-select-option
+            v-for="item in categoryInfo.list" 
+            :key="item.id"
+            :value="item.id"
+          >{{ item.name }}</a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label="地址">
         <a-input v-model:value="form.url" placeholder="http:// 或 https://" allow-clear>
           <template #suffix>
@@ -86,10 +99,12 @@ import type { LinkDto } from '../../interface';
 import { message as toast } from 'ant-design-vue';
 import { http } from '@/utils';
 import { ApiLink } from '@/apis';
-import { useLink } from '../../hooks/link';
+import { useLink } from '../../hooks/use-link';
 import ColorList from './color-list.vue';
+import { useCategory } from '../../hooks/use-category';
 
 const { linkInfo } = useLink()
+const { categoryInfo } = useCategory()
 const emits = defineEmits(['refresh'])
 const colors = [
   'linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.2)),conic-gradient(from 190deg at 57% 40%,#8b6ff4 -96deg,#615ced 41deg,#615ced 207deg,#8b6ff4 264deg,#615ced 401deg)',
@@ -127,7 +142,7 @@ function handleCancel() {
   const timer = setTimeout(() => {
     clearTimeout(timer)
     linkInfo.form.current = {}
-    linkInfo.form.categoryId = ''
+    linkInfo.form.categoryId = null
     Object.assign(form, initFormData())
   }, 100)
 }
@@ -138,6 +153,10 @@ const loading = ref(false)
 function handleConfirm() {
   const { id } = linkInfo.form.current
   const typeName = `${isEdit.value ? '编辑' : '新增'}`
+  if (!linkInfo.form.categoryId) {
+    toast.info('请选择分类')
+    return
+  }
   if (!form.name) {
     toast.info('请输入名称')
     return

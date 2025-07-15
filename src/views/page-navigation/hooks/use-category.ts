@@ -1,34 +1,13 @@
-import { ApiBackup, ApiFile, ApiLink } from "@/apis";
-import type { ContextMenuProps } from "@/directives/context-menu/interface";
+import { ApiFile, ApiLink } from "@/apis";
 import { http } from "@/utils";
 import type { PagingResponse } from "@/utils/http/interface";
 import type { LinkTreeDto } from "@/views/page-navigation/interface";
 import { reactive } from "vue";
 import { Modal, message as toast } from 'ant-design-vue'
 
-const props: ContextMenuProps = {
-  options: [
-    { name: '新增分类', code: 'category-add' },
-    // { name: '导入本地文件', code: 'link-import' },
-    { name: '备份一下', code: 'backup' }
-  ],
-  onChoose({ code }) {
-    switch(code) {
-      case 'category-add':
-        handleAdd()
-        break
-      case 'link-import':
-        (document.querySelector('#category-input') as HTMLInputElement)?.click()
-        break
-      case 'backup':
-        handleBackup()
-        break
-    }
-  }
-}
 
 /**链接分类相关信息 */
-const category = reactive({
+const categoryInfo = reactive({
   /**分类列表（包含所有链接） */
   list: [] as LinkTreeDto[],
   /**请求成功标识 */
@@ -39,21 +18,14 @@ const category = reactive({
     show: false,
     /**当前选中的分类数据 */
     current: {} as LinkTreeDto
-  },
-  /**右键上下文信息 */
-  contextMenu: { props }
+  }
 })
 
-/**链接分类 - 新增 */
-function handleAdd() {
-  category.form.current = {}
-  category.form.show = true
-}
 /**获取所有链接分类及其下链接 */
 function getCategoryList() {
   return http.post<PagingResponse<LinkTreeDto>>(ApiLink.getLinkTreeList)
     .then(res => {
-      category.requestFinished = true
+      categoryInfo.requestFinished = true
       const { data, message, success } = res || {}
       if (!success) {
         toast.error(message || '获取链接数据错误')
@@ -63,21 +35,21 @@ function getCategoryList() {
         toast.error('获取链接数据失败')
         return
       }
-      category.list = data.list || []
+      categoryInfo.list = data.list || []
     })
     .catch(error => {
-      category.requestFinished = true
+      categoryInfo.requestFinished = true
       toast.error(error || '获取链接数据错误')
     })
 }
 /**链接分类拖拽开始事件 */
 let oldIds: string | null = null
 function handleDragStart() {
-  oldIds = category.list.map(item => item.id).join(',')
+  oldIds = categoryInfo.list.map(item => item.id).join(',')
 }
 /**链接分类拖拽结束事件 */
 function handleDragEnd() {
-  const ids = category.list.map(item => item.id)
+  const ids = categoryInfo.list.map(item => item.id)
   if (!ids.length) {
     toast.info('未获取到分类id')
     return
@@ -103,13 +75,13 @@ function handleDragEnd() {
 }
 /**新增分类 */
 function handleCategoryAdd() {
-  category.form.current = {}
-  category.form.show = true
+  categoryInfo.form.current = {}
+  categoryInfo.form.show = true
 }
 /**编辑分类 */
 function handleCategoryEdit(item: LinkTreeDto) {
-  category.form.current = item
-  category.form.show = true
+  categoryInfo.form.current = item
+  categoryInfo.form.show = true
 }
 /**删除分类 */
 function handleCategoryDelete(id?: string) {
@@ -208,35 +180,12 @@ function addLinksFromItab(type: string, list: LinkTreeDto[]) {
     toast.error(error || '导入数据错误')
   })
 }
-/**备份当前导航 */
-function handleBackup() {
-  Modal.confirm({
-    title: '提示',
-    content: '备份所有分类和链接，本地主题配置不会保存',
-    okText: '确认',
-    cancelText: '取消',
-    onOk() {
-      http.post(ApiBackup.manualBackup)
-        .then(res => {
-          const { success, message  } = res
-          if (!success) {
-            toast.error(message || '备份失败')
-            return
-          }
-          toast.success('备份成功，可在历史备份记录中查看')
-        })
-        .catch(error => {
-          toast.error(error || '备份失败')
-        })
-    }
-  })
-}
 
 /**链接分类 - 数据相关 */
 export const useCategory = () => {
   return {
     /**链接分类相关信息 */
-    category,
+    categoryInfo,
     /**链接分类相关事件 */
     categoryEvent: {
       add: handleCategoryAdd,

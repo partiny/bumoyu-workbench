@@ -13,20 +13,20 @@
         :animation="400"
         :data-category-id="categoryId"
         @start="linkEvent.dragStart"
-        @end="e => linkEvent.dragEnd(e, list)"
+        @end="(e: DragEventDto) => linkEvent.dragEnd(e, list)"
       >
         <template #item="{ element }">
           <custom-link
             :item="element"
             :data-link-id="element.id"
-            v-context-menu="linkEvent.getLinkContextMenuProps(element, categoryId)"
+            v-context-menu="getLinkContextMenuProps(element, categoryId)"
             @click="openNewTab(element.url)"
           />
         </template>
       </draggable>
       
       <div v-else class="h-100% flex items-center justify-center" :key="`else-${categoryId}`">
-        <a-empty v-if="category.requestFinished" description="链接空空如也，右键新建一个吧~" />
+        <a-empty v-if="categoryInfo.requestFinished" description="链接空空如也，右键新建一个吧~" />
       </div>
     </Transition>
     <link-form @refresh="emits('refresh')"
@@ -35,13 +35,14 @@
 </template>
 <script setup lang="ts">
 import type { ContextMenuProps } from '@/directives/context-menu/interface';
-import type { LinkDto, PropType } from '@/views/page-navigation/interface';
+import type { DragEventDto, LinkDto, PropType } from '@/views/page-navigation/interface';
 import CustomLink from '../../custom-link/index.vue'
 import LinkForm from '@/views/page-navigation/components/link-form/link-form.vue';
 import { openNewTab } from '@/utils';
 import draggable from 'vuedraggable'
-import { useCategory } from '@/views/page-navigation/hooks/category';
-import { useLink } from '@/views/page-navigation/hooks/link';
+import { useCategory } from '@/views/page-navigation/hooks/use-category';
+import { useLink } from '@/views/page-navigation/hooks/use-link';
+import useContextMenu from '../../hooks/use-context-menu';
 
 const props = defineProps({
   categoryId: {
@@ -49,8 +50,9 @@ const props = defineProps({
     default: ''
   }
 })
-const { category } = useCategory()
+const { categoryInfo } = useCategory()
 const { linkEvent } = useLink()
+const { getLinkContextMenuProps } = useContextMenu()
 const list = defineModel<LinkDto[]>('list', {
   default: () => []
 })
@@ -58,7 +60,7 @@ const emits = defineEmits(['refresh'])
 
 const contextMenuProps: ContextMenuProps = {
   options: [
-    { name: '添加链接', code: 'link-add' }
+    { name: '添加导航', code: 'link-add' }
   ],
   onChoose(item) {
     switch(item.code) {

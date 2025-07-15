@@ -47,14 +47,12 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
 import { SearchOutlined } from '@ant-design/icons-vue'
-import { useCategory } from '../../hooks/category'
+import { useCategory } from '../../hooks/use-category'
 import type { LinkDto, LinkTreeDto } from '../../interface'
 import LinkCard from '../../custom-link/link-card.vue'
 import { openNewTab } from '@/utils'
 
-const {
-  category
-} = useCategory()
+const { categoryInfo } = useCategory()
 // 当前选中项的索引
 const activeIndex = ref(-1)
 // 扁平化的搜索结果列表
@@ -70,7 +68,7 @@ const groupedResults = computed(() => {
   const term = searchTerm.value.toLowerCase()
   const results: LinkTreeDto[] = []
   
-  category.list.forEach(item => {
+  categoryInfo.list.forEach(item => {
     const matchedLinks = item.children?.filter(link => 
       link.name?.toLowerCase().includes(term) || 
       (link.url && link.url.toLowerCase().includes(term))

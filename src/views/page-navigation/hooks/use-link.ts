@@ -1,12 +1,11 @@
 import { reactive, ref } from "vue";
-import type { DragEventDto, LinkDto, LinkTreeDto } from "../interface";
-import { http, openNewTab } from "@/utils";
-import type { ContextMenuProps } from "@/directives/context-menu/interface";
+import type { DragEventDto, LinkDto } from "../interface";
+import { http } from "@/utils";
 import { ApiLink } from "@/apis";
 import { Modal, message as toast } from "ant-design-vue";
-import { useCategory } from "./category";
+import { useCategory } from "./use-category";
 
-const { category: categoryInfo, categoryEvent } = useCategory()
+const { categoryInfo, categoryEvent } = useCategory()
 
 /**链接相关信息 */
 const linkInfo = reactive({
@@ -14,7 +13,7 @@ const linkInfo = reactive({
   /**新增/编辑表单相关信息 */
   form: {
     /**分类id */
-    categoryId: '',
+    categoryId: null as string | null,
     /**控制表单显隐 */
     show: false,
     /**当前选中的链接数据 */
@@ -22,69 +21,10 @@ const linkInfo = reactive({
   }
 })
 
-/**获取分类右键上下文菜单配置事件 */
-function getCategoryContextMenuProps(categoryId?: string): ContextMenuProps {
-  return {
-    options: [
-      { name: '新增分类', code: 'category-add' },
-      { name: '编辑分类', code: 'category-edit' },
-      { name: '删除分类', code: 'category-delete' },
-      { name: '添加链接', code: 'link-add' }
-    ],
-    onChoose(item) {
-      const category = categoryInfo.list.find(ca => ca.id === categoryId) || {}
-      switch(item.code) {
-        case 'category-add':
-          categoryEvent.add()
-          break;
-        case 'category-edit':
-          categoryEvent.edit(category)
-          break;
-        case 'category-delete':
-          categoryEvent.delete(category.id)
-          break
-        case 'link-add':
-          handleLinkAdd(category.id)
-          break
-      }
-    }
-  }
-}
-/**获取链接右键上下文菜单配置事件 */
-function getLinkContextMenuProps(item: LinkDto, categoryId: string): ContextMenuProps {
-  return {
-    options: [
-    { name: '在新标签页打开', code: 'link-open' },
-    { name: '编辑', code: 'link-edit' },
-    { name: '删除', code: 'link-delete' }
-    ],
-    onChoose({ code }) {
-      const list = categoryInfo.list.find(category => category.id === categoryId)?.children || []
-      const link = list.find(link => link.id === item.id) ?? {}
-      switch(code) {
-        case 'link-open':
-          openNewTab(link.url)
-          break
-        case 'link-edit':
-          // 此处直接取item，取到的不是最新的，暂时未找到解决方案
-          // 所以通过id从list中重新获取item
-          handleLinkEdit(link, categoryId)
-          break
-        case 'link-delete':
-          handleLinkDelete(link.id)
-          break
-      }
-    }
-  }
-}
 /**新增链接 */
 function handleLinkAdd(categoryId?: string) {
-  if (!categoryId) {
-    toast.info('先去创建一个分类吧')
-    return
-  }
   linkInfo.form.current = {}
-  linkInfo.form.categoryId = categoryId
+  if (categoryId) linkInfo.form.categoryId = categoryId
   linkInfo.form.show = true
 }
 /**编辑链接 */
@@ -206,11 +146,11 @@ export const useLink = () => {
     linkInfo,
     /**链接相关事件 */
     linkEvent: {
-      getCategoryContextMenuProps,
-      getLinkContextMenuProps,
       dragStart: handleDragStartNew,
       dragEnd: handleDragEndNew,
       add: handleLinkAdd,
+      edit: handleLinkEdit,
+      delete: handleLinkDelete,
       isDragging
     }
   }

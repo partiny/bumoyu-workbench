@@ -57,7 +57,7 @@ import { http } from '@/utils';
 import { reactive, watch, ref } from 'vue';
 import { Modal, message as toast, type PaginationProps } from 'ant-design-vue'
 import type { PagingResponse } from '@/utils/http/interface';
-import { useCategory } from '../hooks/category';
+import { useCategory } from '../hooks/use-category';
 import dayjs from 'dayjs'
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons-vue';
 

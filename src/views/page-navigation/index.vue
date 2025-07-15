@@ -26,34 +26,38 @@ const coms: { [key: string]: Component } = {
 
 const navigationSearchRef = ref()
 function handleKeyDown(event: KeyboardEvent) {
-  // 快捷键：ctrl + f
-  if (event.ctrlKey && event.key.toLowerCase() === 'f') {
-    event.preventDefault()
-    navigationSearchRef.value?.open()
-  } else if (
-    // 快捷键：ctrl + 左箭头 切换左侧边栏显隐
-    event.ctrlKey && event.key.toLowerCase() === 'arrowleft'
-  ) {
-    global.updateConfig('sidebar', {
-      ...global.config.sidebar,
-      fold: !global.config.sidebar.fold 
-    })
-  } else if (
-    // 快捷键：ctrl + 右箭头 切换右侧边栏显隐
-    event.ctrlKey && event.key.toLowerCase() === 'arrowright'
-  ) {
-    global.updateConfig('settingsBar', {
-      ...global.config.settingsBar,
-      fold: !global.config.settingsBar.fold 
-    })
+  if (event.ctrlKey) {
+    switch(event.key.toLowerCase()) {
+      // ctrl + f：导航搜索
+      case 'f':
+        event.preventDefault()
+        navigationSearchRef.value?.open()
+        break;
+      // ctrl + 左箭头 切换左侧边栏显隐
+      case 'arrowleft':
+        event.preventDefault()
+        global.updateConfig('sidebar', {
+          ...global.config.sidebar,
+          fold: !global.config.sidebar.fold 
+        })
+        break;
+      // ctrl + 右箭头 切换右侧边栏显隐
+      case 'arrowright':
+        event.preventDefault()
+        global.updateConfig('settingsBar', {
+          ...global.config.settingsBar,
+          fold: !global.config.settingsBar.fold 
+        })
+        break;
+    }
   }
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener('keydown', handleKeyDown, true)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown)
+  window.removeEventListener('keydown', handleKeyDown, true)
 })
 </script>

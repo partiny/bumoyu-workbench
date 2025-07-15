@@ -1,5 +1,5 @@
 <template>
-  <div class="category-item" v-context-menu="linkEvent.getCategoryContextMenuProps(category.id)">
+  <div class="category-item" v-context-menu="getCategoryContextMenuProps(category.id)">
     <h3 class="category-item-title">{{ category.name }}</h3>
     <draggable
       :key="category.id"
@@ -19,7 +19,7 @@
         <custom-link
           :item="element"
           :data-link-id="element.id"
-          v-context-menu="linkEvent.getLinkContextMenuProps(element, category.id || '')"
+          v-context-menu="getLinkContextMenuProps(element, category.id || '')"
           @click="openNewTab(element.url)"
         />
       </template>
@@ -39,8 +39,9 @@ import type { LinkDto, LinkTreeDto, PropType } from '../../interface';
 import CustomLink from '../../custom-link/index.vue'
 import { openNewTab } from '@/utils';
 import draggable from 'vuedraggable'
-import { useCategory } from '@/views/page-navigation/hooks/category';
-import { useLink } from '@/views/page-navigation/hooks/link';
+import { useCategory } from '@/views/page-navigation/hooks/use-category';
+import { useLink } from '@/views/page-navigation/hooks/use-link';
+import useContextMenu from '../../hooks/use-context-menu';
 
 defineProps({
   category: {
@@ -49,7 +50,11 @@ defineProps({
   }
 })
 const { linkEvent } = useLink()
-const { category: categoryInfo } = useCategory()
+const { categoryInfo } = useCategory()
+const {
+  getCategoryContextMenuProps,
+  getLinkContextMenuProps
+} = useContextMenu()
 const list = defineModel<LinkDto[]>('list', {
   default: () => []
 })
