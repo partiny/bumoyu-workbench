@@ -6,6 +6,9 @@
     :closable="false"
     width="500px"
     :z-index="1001"
+    :root-style="{
+      zIndex: 1001
+    }"
     @close="handleFormClose"
   >
     <template #extra>
@@ -96,7 +99,7 @@
 <script setup lang="ts">
 import { computed, h, ref } from 'vue';
 import useForm from '../hooks/use-form';
-import { CloseOutlined } from '@ant-design/icons-vue';
+import { CloseOutlined, ZhihuCircleFilled } from '@ant-design/icons-vue';
 import { http } from '@/utils';
 import { ApiTodo } from '@/apis'
 import { message as toast } from 'ant-design-vue';
