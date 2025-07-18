@@ -7,5 +7,8 @@ export default defineConfig({
     presetRemToPx({
       baseFontSize: 4
     })
+  ],
+  rules: [
+    [/^fs-([\.\d]+)$/, ([_, num]) => ({ 'font-size': `${num}px` })]
   ]
 })

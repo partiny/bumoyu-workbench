@@ -43,7 +43,7 @@
                 <span>{{ userInfo.userName || '' }}</span>
               </div>
               <ul>
-                <li class="popover-item" @click="handleSwitchAccount">切换账号</li>
+                <!-- <li class="popover-item" @click="handleSwitchAccount">切换账号</li> -->
                 <li class="popover-item" @click="handleSignOut">退出登录</li>
               </ul>
             </div>
@@ -67,7 +67,7 @@ import { ClockCircleOutlined, FileTextOutlined } from '@ant-design/icons-vue';
 import BackupModal from '@/views/page-navigation/components/backup-modal.vue';
 import { useGlobalStore } from '@/stores';
 import useBaseInfo from '@/stores/base';
-import { message as toast } from 'ant-design-vue';
+// import { message as toast } from 'ant-design-vue';
 
 const global = useGlobalStore()
 const router = useRouter()
@@ -134,9 +134,9 @@ function handleSignOut() {
   router.push('/login')
 }
 /**切换账号 */
-function handleSwitchAccount() {
-  toast.info('功能待开发')
-}
+// function handleSwitchAccount() {
+//   toast.info('功能待开发')
+// }
 </script>
 <style scoped lang="scss">
 .layout-sidebar {

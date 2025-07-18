@@ -9,9 +9,9 @@
       <a-tooltip title="导入本地分类及链接数据（支持 iTab 数据）">
         <a-button class="flex items-center" size="small" @click="handleImport">
           <template #icon>
-            <UploadOutlined class="font-size-12" />
+            <UploadOutlined class="fs-12" />
           </template>
-          <span class="font-size-12">导入本地数据</span>
+          <span class="fs-12">导入本地数据</span>
         </a-button>
       </a-tooltip>
       <a-tooltip title="导出当前分类及链接数据">
@@ -22,9 +22,9 @@
           @click="handleDownloadCurrent"
         >
           <template #icon>
-            <DownloadOutlined class="font-size-12" />
+            <DownloadOutlined class="fs-12" />
           </template>
-          <span class="font-size-12">导出到本地</span>
+          <span class="fs-12">导出到本地</span>
         </a-button>
       </a-tooltip>
     </a-space>

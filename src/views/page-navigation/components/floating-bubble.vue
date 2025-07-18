@@ -7,7 +7,7 @@
       </template>
     </a-float-button>
     <template #content>
-      <h3 class="fw-600 font-size-14">快捷键说明</h3>
+      <h3 class="fw-600 fs-14">快捷键说明</h3>
       <ul class="shortcut-key-list">
         <li class="shortcut-key-item">
           <span>导航搜索</span>

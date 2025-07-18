@@ -18,5 +18,10 @@ export const ApiAuth = {
   /**重置密码时发送邮箱验证码 */
   sendEmailCodeOfResetPassword: `${PREFIX}/send-email-code-of-reset-password`,
   /**重置密码 */
-  resetPassword: `${PREFIX}/reset-password`
+  resetPassword: `${PREFIX}/reset-password`,
+  /**邮箱登录时发送邮箱验证码 */
+  sendEmailCodeOfEmailLogin: `${PREFIX}/send-email-code-of-email-login`,
+  /**邮箱登录 */
+  emailLogin: `${PREFIX}/email-login`
+
 }

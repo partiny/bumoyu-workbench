@@ -4,40 +4,31 @@
       <div class="w-360">
         <div class="logo-wrap">
           <img src="/src/assets/images/logo.png" />
-          <span>{{ projectName }}</span>
+          <span class="logo-wrap-title">{{ projectName }}</span>
+          <span class="logo-wrap-subtitle">{{ `(${loginMethodName})` }}</span>
         </div>
-        <a-form spellcheck="false" autocomplete="off">
-          <a-form-item>
-            <a-input
-              v-model:value.trim="form.userName"
-              class="h-50 font-size-16! b-rd-12"
-              placeholder="请输入用户名"
-              allow-clear
-              :maxlength="20"
-            />
-          </a-form-item>
-          <a-form-item>
-            <a-input-password
-              v-model:value.trim="form.password"
-              class="h-50 font-size-16 b-rd-12"
-              placeholder="请输入密码"
-              allow-clear
-              :maxlength="20"
-            />
-          </a-form-item>
-        </a-form>
+        <component
+          ref="formRef"
+          :is="loginComponent"
+          v-model:loading="loading"
+        />
         <a-divider>
-          <span class="color-#8f91a8 font-size-12">其他登录方式</span>
+          <span class="color-#8f91a8 fs-12">其他登录方式</span>
         </a-divider>
         <ul class="method-list">
-          <li
+          <a-tooltip
             v-for="item in methodList"
             :key="item.value"
-            class="method-item"
-            @click="toast.info('该功能暂未开放')"
+            :mouse-enter-delay="1"
+            :title="item.label"
           >
-            <img :src="item.icon" :alt="item.label" />
-          </li>
+            <li
+              class="method-item"
+              @click="loginMethod = item.value"
+            >
+              <img :src="item.icon" :alt="item.label" />
+            </li>
+          </a-tooltip>
         </ul>
         <div class="agreement">
           <a-checkbox v-model:checked="form.agreement">
@@ -66,61 +57,49 @@
 <script setup lang="ts">
 import ImgEmail from '@/assets/images/login/logo_method_email.png'
 import ImgPassword from '@/assets/images/login/logo_method_password.png'
-import { ApiAuth } from '@/apis';
-import { http, setRefreshToken, setToken, openNewTab } from '@/utils';
-import { reactive, ref } from 'vue';
+import { openNewTab } from '@/utils';
+import { computed, reactive, ref } from 'vue';
 import { message as toast } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
+import PasswordLogin from './components/password-login.vue';
+import EmailLogin from './components/email-login.vue';
 
 const projectName = import.meta.env.VITE_PROJECT_NAME
 const methodList = [
-  { label: '邮箱验证码登录', value: 'email', icon: ImgEmail },
-  { label: '用户名密码登录', value: 'username', icon: ImgPassword }
+  {
+    label: '用户名密码登录',
+    value: 'password',
+    icon: ImgPassword
+  },
+  {
+    label: '邮箱验证码登录',
+    value: 'email',
+    icon: ImgEmail
+  }
 ]
+/**登录方式 'email' | 'password'，默认密码登录 */
+const loginMethod = ref<string>('password')
+const loginComponent = computed(() => (
+  loginMethod.value === 'email' ? EmailLogin : PasswordLogin
+))
+const loginMethodName = computed(() => (
+  loginMethod.value === 'email' ? '邮箱登录' : '密码登录'
+))
 const formInit = () => ({
-  userName: '',
-  password: '',
   agreement: false
 })
 const form = reactive(formInit())
 const loading = ref(false)
 const router = useRouter()
+const formRef = ref()
 
 /**提交 */
 function handleSubmit() {
-  if (!form.userName) {
-    toast.info('用户名不能为空')
-    return
-  }
-  if (!form.password) {
-    toast.info('密码不能为空')
-    return
-  }
   if (!form.agreement) {
     toast.info('请阅读并同意协议')
     return
   }
-  loading.value = true
-  http.post<{ accessToken: string; refreshToken: string; }>(ApiAuth.signIn, { ...form })
-    .then(res => {
-      loading.value = false
-      const { data, message, success } = res || {}
-      if (!success) {
-        toast.error(message || '登录请求错误')
-        return
-      }
-      if (!data) {
-        toast.error('登录失败')
-        return
-      }
-      setToken(data.accessToken)
-      setRefreshToken(data.refreshToken)
-      router.push('/')
-    })
-    .catch(error => {
-      loading.value = false
-      toast.error(error || '登录请求错误')
-    })
+  formRef.value?.submit()
 }
 /**打开协议 */
 function toAgreement(type: string) {
@@ -162,9 +141,13 @@ function toAgreement(type: string) {
   > img {
     height: 36px;
   }
-  > span {
+  &-title {
     transform: translateY(2px);
     font-weight: 600;
+  }
+  &-subtitle {
+    font-size: 16px;
+    transform: translateY(5px);
   }
 }
 .btn-login {
@@ -191,6 +174,7 @@ function toAgreement(type: string) {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
   > img {
     width: 20px;
     height: 20px;
@@ -199,6 +183,9 @@ function toAgreement(type: string) {
     background-color: #fff;
     pointer-events: none;
     user-select: none;
+  }
+  &:hover {
+    background-color: #e9ebf1;
   }
 }
 .agreement {

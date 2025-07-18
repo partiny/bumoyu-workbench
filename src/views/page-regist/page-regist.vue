@@ -16,21 +16,21 @@
           <a-form-item name="userName">
             <a-input
               v-model:value.trim="form.userName"
-              class="h-50 font-size-16! b-rd-12"
+              class="h-50 fs-16! b-rd-12"
               placeholder="请输入用户名（ 字母、数字或_ ）"
               allow-clear
               :maxlength="20"
-              :show-count="form.userName.length"
+              show-count
             />
           </a-form-item>
           <a-form-item name="email">
             <a-input
               v-model:value.trim="form.email"
-              class="h-50 font-size-16! b-rd-12"
+              class="h-50 fs-16! b-rd-12"
               placeholder="请输入邮箱"
               allow-clear
               :maxlength="30"
-              :show-count="form.email.length"
+              show-count
             />
           </a-form-item>
           <a-form-item name="verificationCode">
@@ -38,11 +38,11 @@
               <a-input
                 v-model:value="form.verificationCode"
                 :bordered="false"
-                class="font-size-16"
+                class="fs-16"
                 placeholder="请输入验证码"
                 allow-clear
                 :maxlength="6"
-                :show-count="form.verificationCode.length"
+                show-count
               />
               <a-divider class="ml-4 mr-4" type="vertical" />
               <a-button
@@ -52,7 +52,7 @@
                 @click="handleSendCode"
               >{{ btnCodeText }}</a-button>
             </div>
-            <div v-if="!isSendInit" class="flex items-center mt-12 font-size-13 color-#373d41">
+            <div v-if="!isSendInit" class="flex items-center mt-12 fs-13 color-#373d41">
               <CheckCircleOutlined class="color-#7ef705 mr-6" />
               <p>邮箱验证码已发送，可能会有延后，请耐心等待</p>
             </div>
@@ -60,21 +60,21 @@
           <a-form-item name="password">
             <a-input-password
               v-model:value.trim="form.password"
-              class="h-50 font-size-16! b-rd-12"
+              class="h-50 fs-16! b-rd-12"
               placeholder="请输入密码"
               allow-clear
               :maxlength="20"
-              :show-count="form.password.length"
+              show-count
             />
           </a-form-item>
           <a-form-item name="confirmPassword">
             <a-input-password
               v-model:value.trim="form.confirmPassword"
-              class="h-50 font-size-16! b-rd-12"
+              class="h-50 fs-16! b-rd-12"
               placeholder="再次输入密码"
               allow-clear
               :maxlength="20"
-              :show-count="form.confirmPassword.length"
+              show-count
             />
           </a-form-item>
         </a-form>
@@ -94,22 +94,12 @@
 </template>
 <script setup lang="ts">
 import { ApiAuth } from '@/apis';
-import { http, setRefreshToken, setToken, openNewTab, REGEXP } from '@/utils';
+import { http, REGEXP } from '@/utils';
 import { computed, reactive, ref } from 'vue';
 import { message as toast } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import type { Rule } from 'ant-design-vue/es/form';
 import { CheckCircleOutlined } from '@ant-design/icons-vue';
-
-const step = reactive({
-  current: 0,
-  list: [
-    { title: '填写用户名和邮箱' },
-    { title: '设置登录密码' }
-  ]
-})
-const projectName = import.meta.env.VITE_PROJECT_NAME
-
 
 const formInit = () => ({
   userName: '',

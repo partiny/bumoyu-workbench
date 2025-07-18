@@ -68,17 +68,17 @@ const table = reactive({
       status: 0,
       time: '-'
     },
-    {
-      id: 8,
-      feature: '新增体重记录模块',
-      status: 0,
-      time: '-'
-    },
+    // {
+    //   id: 8,
+    //   feature: '新增体重记录模块',
+    //   status: 0,
+    //   time: '-'
+    // },
     {
       id: 9,
       feature: '新增待办功能',
       status: 3,
-      time: '-'
+      time: '03-14'
     }
   ],
   columns: [

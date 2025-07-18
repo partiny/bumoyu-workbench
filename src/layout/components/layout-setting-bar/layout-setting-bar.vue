@@ -54,9 +54,9 @@ const menuList = shallowRef([
   { id: 1, name: '导航', component: SettingNavigation, hide: false },
   { id: 2, name: '搜索', component: SettingSearch, hide: isInIframe.value },
   { id: 3, name: '侧边栏', component: SettingSidebar, hide: false },
-  { id: 4, name: '主题', hide: isInIframe.value  },
+  // { id: 4, name: '主题', hide: isInIframe.value  },
   { id: 5, name: '计划', component: SettingPlan, hide: isInIframe.value  },
-  { id: 6, name: '关于', hide: isInIframe.value  }
+  // { id: 6, name: '关于', hide: isInIframe.value  }
 ])
 const activeMenuId = ref(1)
 // 侧边栏是否折叠

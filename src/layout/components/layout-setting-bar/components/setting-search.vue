@@ -2,7 +2,7 @@
   <div class="pt-20 pb-20 pl-10 pr-10">
     <ul>
       <li>
-        <h5 class="font-size-16">搜索引擎</h5>
+        <h5 class="fs-16">搜索引擎</h5>
         <div class="pt-10">
           <a-radio-group
             v-model:value="engineValue"

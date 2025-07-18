@@ -32,6 +32,14 @@ const router = createRouter({
           meta: {
             title: '待办'
           }
+        },
+        {
+          path: '/code-snippet',
+          name: 'CodeSnippet',
+          component: () => import('@/views/code-snippet/code-snippet.vue'),
+          meta: {
+            title: '代码片段'
+          }
         }
       ]
     },

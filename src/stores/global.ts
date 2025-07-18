@@ -17,8 +17,6 @@ export const useGlobalStore = defineStore('global', () => {
         }
       })
     }
-
-    console.log('init-config: ', config.value)
   }
   /**更新单个配置项 */
   function updateConfig<T extends ConfigKey>(

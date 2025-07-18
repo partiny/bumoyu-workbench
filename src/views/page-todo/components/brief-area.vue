@@ -1,9 +1,9 @@
 <template>
   <section class="p-16">
-    <h3 class="font-size-16 fw-500 mb-20">待办</h3>
+    <h3 class="fs-16 fw-500 mb-20">待办</h3>
     <div class="calendar-wrap">
       <div class="flex items-center justify-between mb-16">
-        <span class="font-size-14">{{ currentMonth }}</span>
+        <span class="fs-14">{{ currentMonth }}</span>
         <div class="flex items-center gap-8">
           <a-button type="primary" ghost size="small" @click="backToToday">今天</a-button>
           <a-space>

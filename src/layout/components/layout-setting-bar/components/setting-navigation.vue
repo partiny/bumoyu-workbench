@@ -2,7 +2,7 @@
   <div class="pt-20 pb-20 pl-10 pr-10">
     <ul>
       <li class="mb-20">
-        <h5 class="font-size-16">分类样式</h5>
+        <h5 class="fs-16">分类样式</h5>
         <div class="pt-10">
           <a-radio-group
             v-model:value="categoryValue"
@@ -13,7 +13,7 @@
         </div>
       </li>
       <li>
-        <h5 class="font-size-16">导航样式</h5>
+        <h5 class="fs-16">导航样式</h5>
         <div class="pt-10">
           <a-radio-group
             v-model:value="linkValue"
