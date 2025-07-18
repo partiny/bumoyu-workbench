@@ -21,12 +21,15 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@monaco-editor/loader": "^1.5.0",
     "@unocss/reset": "^0.64.1",
     "ant-design-vue": "^4.2.6",
     "axios": "^1.7.8",
     "dayjs": "^1.11.13",
     "jwt-decode": "^4.0.0",
+    "monaco-editor": "^0.50.0",
     "pinia": "^2.2.6",
+    "uuid": "^11.1.0",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5",
     "vuedraggable": "^4.1.0"
@@ -47,7 +50,7 @@
     "sass-embedded": "^1.89.2",
     "standard-version": "^9.5.0",
     "typescript": "^5.8.3",
-    "unocss": "^0.64.1",
+    "unocss": "^66.3.3",
     "vite": "^6.3.5",
     "vite-plugin-vue-devtools": "^7.5.4",
     "vue-tsc": "^2.1.10"
