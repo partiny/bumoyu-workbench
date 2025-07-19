@@ -43,28 +43,8 @@
       </template>
     </a-empty>
 
-    <!-- 创建新片段模态框 -->
-    <a-modal
-      v-model:open="showCreateModal"
-      title="新建代码片段"
-      width="80%"
-      :footer="null"
-    >
-      <snippet-editor
-        @submit="handleCreateSubmit"
-        @cancel="showCreateModal = false"
-      />
-    </a-modal>
-
-    <!-- 详情弹窗 -->
-    <SnippetDetail
-      :snippet="currentSnippet"
-      :visible="showDetailModal"
-      @update:visible="showDetailModal = $event"
-      @saved="fetchSnippets"
-    />
-    <!-- 新增/编辑代码片段抽屉 -->
-    <snippet-edit-drawer
+    <!-- 新增/编辑代码片段弹窗 -->
+    <snippet-edit-modal
       v-model:visible="isSnippetEditDrawerShow"
     />
   </div>
@@ -75,11 +55,9 @@ import { ref, onMounted } from 'vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import SnippetCard from './components/snippet-card.vue';
-import SnippetDetail from './components/snippet-detail.vue';
-import SnippetEditor from './components/snippet-editor.vue';
 import { useSnippetStore } from './hooks/use-snippet';
 import type { CodeSnippet } from './interface';
-import SnippetEditDrawer from './components/snippet-edit-drawer.vue';
+import SnippetEditModal from './components/snippet-edit-modal.vue';
 
 const snippetStore = useSnippetStore();
 const snippets = ref<CodeSnippet[]>([]);
@@ -111,13 +89,6 @@ const handleDelete = (id: string) => {
   snippetStore.deleteSnippet(id);
   fetchSnippets();
   message.success('代码片段已删除');
-};
-
-const handleCreateSubmit = (snippet: CodeSnippet) => {
-  snippetStore.addSnippet(snippet);
-  fetchSnippets();
-  showCreateModal.value = false;
-  message.success('代码片段已创建');
 };
 </script>
 

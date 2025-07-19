@@ -13,13 +13,13 @@ const MECONFIG = {
     scrollBeyondLastLine: false, // 禁用额外滚动区
     // wordWrap: 'on',
     scrollbar: {
-      verticalScrollbarSize: 4, // 垂直滚动条宽度，默认px
+      verticalScrollbarSize: 10, // 垂直滚动条宽度，默认px
       horizontalScrollbarSize: 4 // 水平滚动条高度
     },
     contextmenu: false, // 禁用右键菜单
     readOnly: false, // 是否只读
     value: '', // 默认值
-    language: 'typescript', // 默认语言
+    language: 'plaintext', // 默认语言
     theme: 'vs-dark', // 官方自带三种主题vs, hc-black, or vs-dark
   },
   /**语言列表 */
